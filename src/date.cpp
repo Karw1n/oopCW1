@@ -22,8 +22,23 @@ Date::Date() : year(0), month(0), day(0), initialized(false) {}
 // Example:
 //  Date d = Date();
 //  d.setDateString("2024-01-01");
-void Date::setDateFromString(std::string date) {
-    
+void Date::setDateFromString(const std::string& date) {
+    if (date.empty()) {
+        this->initialized = false;
+    } else {
+        if (date.size() != 10 || date[4] != 4 || date[7] != '-') {
+            throw std::invalid_argument("Incorrect date string formated entered. Correct format: YYYY-MM-DD.");
+        }
+
+        try {
+            this->year = std::stoi(date.substr(0, 4));
+            this->month = std::stoi(date.substr(5, 2));
+            this->day = std::stoi(date.substr(8, 2));
+            this->initialized = true;
+        } catch (const std::invalid_argument& e) {
+            throw std::invalid_argument("Invalid date format: " + std::string(e.what()));
+        }
+    } 
 }
 
 // TODO Write a function, isInitialised, that takes no parameters and returns true

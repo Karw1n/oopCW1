@@ -28,7 +28,7 @@ private:
 
 public:
   Date();
-  void setDateFromString(std::string string);
+  void setDateFromString(const std::string& string);
   bool isInitialised() const;
   std::string str() const;
   void setDate(unsigned int year, unsigned int month, unsigned int day);
