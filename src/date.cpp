@@ -26,15 +26,29 @@ void Date::setDateFromString(const std::string& date) {
     if (date.empty()) {
         this->initialized = false;
     } else {
-        if (date.size() != 10 || date[4] != 4 || date[7] != '-') {
+        if (date.size() != 10 || date[4] != '-' || date[7] != '-') {
             throw std::invalid_argument("Incorrect date string formated entered. Correct format: YYYY-MM-DD.");
         }
 
+        year = std::stoi(date.substr(0, 4));
+        month = std::stoi(date.substr(5, 2));
+        day = std::stoi(date.substr(8, 2));
+        initialized = true;
+        
+        
+        if (month > 12 || day > 31 || month < 1 || day < 1) {
+            initialized = false;
+            year = 0;
+            month = 0;
+            day = 0;
+            throw std::invalid_argument("Incorrect date entered");
+        }
+
         try {
-            this->year = std::stoi(date.substr(0, 4));
-            this->month = std::stoi(date.substr(5, 2));
-            this->day = std::stoi(date.substr(8, 2));
-            this->initialized = true;
+            this->year = year;
+            this->month = month;
+            this->day = day;
+            this->initialized = initialized;
         } catch (const std::invalid_argument& e) {
             throw std::invalid_argument("Invalid date format: " + std::string(e.what()));
         }
@@ -49,11 +63,7 @@ void Date::setDateFromString(const std::string& date) {
 //    ...
 //  }
 bool Date::isInitialised() const { 
-    if (this->initialized) {
-        return true;
-    } else {
-        return false;
-    }
+    return this->initialized;
 }
 
 // TODO Write a function, str, that takes no parameters and returns a
@@ -123,7 +133,7 @@ unsigned int Date::getDay() const {
 //   }
 bool Date::operator==(const Date &otherDate) const {
     return (this->day == otherDate.getDay() && this->month == otherDate.getMonth() && this->year == otherDate.getYear());
-};
+}
 
 
 // TODO Write an < operator overload for the Date class, that returns true if
@@ -142,4 +152,4 @@ bool Date::operator<(const Date &otherDate) const {
     return ((this->year < otherDate.getYear()) 
         || (this->month < otherDate.getMonth() && this->year <= otherDate.getYear()) 
         || (this->day < otherDate.getDay() && this->month == otherDate.getMonth() && this->year <= otherDate.getYear()));
-};
+}
