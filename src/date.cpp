@@ -22,8 +22,8 @@ Date::Date() : year(0), month(0), day(0), initialized(false) {}
 // Example:
 //  Date d = Date();
 //  d.setDateString("2024-01-01");
-void Date::setDateString(std::string date) {
-
+void Date::setDateFromString(std::string date) {
+    
 }
 
 // TODO Write a function, isInitialised, that takes no parameters and returns true
