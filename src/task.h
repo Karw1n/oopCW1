@@ -15,8 +15,31 @@
 
 #ifndef TASK_H
 #define TASK_H
+#include "date.h"
+#include <vector>
 
 class Task {
+    private:
+        std::string identifier;
+        std::vector<std::string> tags;
+        Date dueDate;
+        bool complete;
+
+    public:
+        Task(const std::string& identifier);
+        std::string getIdent() const;
+        // TODO might need to make other functions const
+        void setIndent(std::string& identifier);
+        bool addTag(std::string tag);
+        bool deleteTag(std::string tag);
+        unsigned int numTags() const;
+        bool containsTag(std::string tag) const;
+        Date getDueDate() const;
+        void setDueDate(Date date);
+        void setComplete(bool aBool);
+        bool isComplete() const;
+        bool operator==(Task& task) const;
+        std::string str() const;
 
 };
 

@@ -2,7 +2,7 @@
   "CSC371": {
     "Lab Assignment 1": {
       "completed": true,
-      "dueDate": "2024-02-13",
+      "dueDate": "2024-10-13",
       "tags": [
         "uni",
         "c",
@@ -11,7 +11,7 @@
     },
     "Lab Assignment 6": {
       "completed": false,
-      "dueDate": "2024-04-23",
+      "dueDate": "2024-11-23",
       "tags": [
         "uni",
         "c++",

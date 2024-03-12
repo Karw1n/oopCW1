@@ -74,9 +74,9 @@ SCENARIO("The database and action program arguments can be parsed correctly "
         "{ \"CSC307\": { \"Write Mobile App\": { \"completed\": true, "
         "\"dueDate\": \"2023-11-30\", \"tags\": [ \"uni\", \"programming\", "
         "\"android\" ] } }, \"CSC371\": { \"Lab Assignment 1\": { "
-        "\"completed\": true, \"dueDate\": \"2024-02-13\", \"tags\": [ "
+        "\"completed\": true, \"dueDate\": \"2024-11-13\", \"tags\": [ "
         "\"uni\", \"c\", \"programming\" ] }, \"Lab Assignment 6\": { "
-        "\"completed\": false, \"dueDate\": \"2024-04-23\", \"tags\": [ "
+        "\"completed\": false, \"dueDate\": \"2024-11-23\", \"tags\": [ "
         "\"uni\", \"c++\", \"programming\", \"standard library\" ] } } }"));
 
     WHEN("the db program argument is '" + filePath +
@@ -99,9 +99,9 @@ SCENARIO("The database and action program arguments can be parsed correctly "
             "App\":{\"completed\":true,\"dueDate\":\"2023-11-30\",\"tags\":["
             "\"uni\",\"programming\",\"android\"]}},\"CSC371\":{\"Lab "
             "Assignment "
-            "1\":{\"completed\":true,\"dueDate\":\"2024-2-13\",\"tags\":["
+            "1\":{\"completed\":true,\"dueDate\":\"2024-11-13\",\"tags\":["
             "\"uni\",\"c\",\"programming\"]},\"Lab Assignment "
-            "6\":{\"completed\":false,\"dueDate\":\"2024-4-23\",\"tags\":["
+            "6\":{\"completed\":false,\"dueDate\":\"2024-11-23\",\"tags\":["
             "\"uni\",\"c++\",\"programming\",\"standard library\"]}}}" == 0));
 
       } // THEN

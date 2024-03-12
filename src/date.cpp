@@ -41,7 +41,7 @@ void Date::setDateFromString(const std::string& date) {
             year = 0;
             month = 0;
             day = 0;
-            throw std::invalid_argument("Incorrect date entered");
+            throw std::invalid_argument("Incorrect date entered.");
         }
 
         try {
@@ -153,3 +153,4 @@ bool Date::operator<(const Date &otherDate) const {
         || (this->month < otherDate.getMonth() && this->year <= otherDate.getYear()) 
         || (this->day < otherDate.getDay() && this->month == otherDate.getMonth() && this->year <= otherDate.getYear()));
 }
+
