@@ -21,11 +21,7 @@
 // Example:
 //  Project p{"projectIdent"};
 //  auto size = p.size();
-unsigned int size() const noexcept {
-    //iterate through the project list
-    
-    return;
-}
+
 
 
 // TODO Write a function, getIdent, that returns the identifier for the Project.
