@@ -16,18 +16,20 @@
 #ifndef TASK_H
 #define TASK_H
 #include "date.h"
-#include <vector>
+
+using TagContainer = std::vector<std::string>;
 
 class Task {
     private:
         std::string identifier;
-        std::vector<std::string> tags;
+        TagContainer tags;
         Date dueDate;
         bool complete;
 
     public:
         Task(const std::string& identifier);
         std::string getIdent() const;
+        const TagContainer &getTags() const noexcept;
         // TODO might need to make other functions const
         void setIndent(std::string& identifier);
         bool addTag(std::string tag);
@@ -40,6 +42,8 @@ class Task {
         bool isComplete() const;
         bool operator==(Task& task) const;
         std::string str() const;
+
+        //std::string Task::getTagAt(unsigned int index) const;
 
 };
 

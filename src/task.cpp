@@ -31,6 +31,10 @@ std::string Task::getIdent() const {
     return identifier;
 }
 
+const TagContainer &Task::getTags() const noexcept {
+    return this->tags;
+}
+
 // TODO Write a function, setIdent, that takes one parameter, a string for a new
 //  Task identifier, and updates the member variable. It returns nothing.
 //
@@ -205,3 +209,7 @@ std::string Task::str() const {
     return sttr.str();
     
 }
+
+// std::string Task::getTagAt(unsigned int index) const {
+//     return this->tags.at(index);
+// }

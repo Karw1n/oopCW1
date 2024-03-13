@@ -14,6 +14,7 @@
 //
 // Example:
 //  Project p{"projectIdent"};
+Project::Project(std::string ident) : ident(ident) {}
 
 // TODO Write a function, size, that takes no parameters and returns an unsigned
 // int of the number of Tasks in the Project contains.
@@ -21,7 +22,9 @@
 // Example:
 //  Project p{"projectIdent"};
 //  auto size = p.size();
-
+unsigned int Project::size() const noexcept{
+    return this->tasks.size();
+}
 
 
 // TODO Write a function, getIdent, that returns the identifier for the Project.
@@ -29,6 +32,9 @@
 // Example:
 //  Project pObj{"projectIdent"};
 //  auto ident = pObj.getIdent();
+const std::string& Project::getIdent() const noexcept {
+    return this->ident;
+}
 
 // TODO Write a function, setIdent, that takes one parameter, a string for a new
 // Project identifier, and updates the member variable. It returns nothing.
@@ -36,6 +42,14 @@
 // Example:
 //  Project pObj{"projectIdent"};
 //  pObj.setIdent("projectIdent2");
+void Project::setIdent(std::string pIdent) noexcept {
+    this->ident = pIdent;
+}
+
+// A function that returns the TaskContainer
+const TaskContainer & Project::getTasks() const noexcept {
+    return this->tasks;
+}
 
 // TODO Write a function, newTask, that takes one parameter, a Task identifier,
 // (a string) and returns the Task object as a reference. If an object with the
@@ -46,6 +60,49 @@
 // Example:
 //  Project pObj{"projectIdent"};
 //  pObj.newTask("newTaskName");
+Task &Project::newTask(const std::string &tIdent) {
+    for (auto& task : this->tasks) {
+        if (task.getIdent() == tIdent) {
+            return task;
+        }
+    }
+
+    try
+    {
+        tasks.push_back(Task(tIdent));
+    }
+    catch(const std::runtime_error& e)
+    {
+        throw e;
+    }
+
+    return tasks.back();
+    
+}
+
+TaskContainer::iterator Project::findTask(const std::string &tIdent) {
+    for (auto it = this->tasks.begin(); it != this->tasks.begin(); it++) {
+        Task task = *it;
+        if (task.getIdent() == tIdent) {
+            return it;
+        }
+    }
+    
+    throw std::runtime_error("Task not found");
+    
+}
+
+bool Project::containsTask(const std::string &tIdent) const noexcept {
+    for (auto it = this->tasks.begin(); it != this->tasks.begin(); it++) {
+        Task task = *it;
+        if (task.getIdent() == tIdent) {
+            return true;
+        }
+    }
+    return false;
+    
+    return false;
+}
 
 // TODO Write a function, addTask, that takes one parameter, a Task object, and
 // returns true if the object was successfully inserted. If an object with the
@@ -59,6 +116,24 @@
 //  Project pObj{"projectIdent"};
 //  Task tObj{"taskIdent"};
 //  pObj.addItem(tObj);
+bool Project::addTask(Task task) {
+    if (this->containsTask(task.getIdent())) {
+        for (Task aTask : this->tasks) {
+            if (aTask.getIdent() == task.getIdent()) {
+                for (unsigned int i = 0; i < task.numTags(); i++) {
+                    if (!aTask.containsTag(task.getTags().at(i))) {
+                        aTask.addTag(task.getTags().at(i));
+                    }
+                }
+                aTask.setComplete(task.isComplete());
+                aTask.setDueDate(task.getDueDate());
+                return false;
+            }
+        }
+    }   
+    this->tasks.push_back(task);
+    return true;
+}
 
 // TODO Write a function, getTask, that takes one parameter, a Task identifier
 // (a string) and returns the Task as a reference. If no Task exists, throw an
@@ -71,6 +146,17 @@
 //  Project pObj{"projectIdent"};
 //  pObj.newTask("newTaskName");
 //  auto tObj = pObj.getTask("newTaskName");
+ Task &Project::getTask(const std::string &tIdent) {
+    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
+        Task task = *it;
+        if (task.getIdent() == tIdent) {
+            return *it;
+        }
+    }
+    throw std::out_of_range("Task not found");
+ }
+
+
 
 // TODO Write a function, deleteTask, that takes one parameter, a Task
 // identifier (a string), deletes it from the container, and returns true if the
@@ -80,6 +166,17 @@
 //  Project pObj{"projectIdent"};
 //  pObj.newTask("newTaskName");
 //  bool result = pObj.deleteTask("newTaskName");
+bool Project::deleteTask(const std::string &tIdent) {
+    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
+        Task task = *it;
+        if (task.getIdent() == tIdent) {
+            this->tasks.erase(it);
+            return true;
+        }
+    }
+    throw std::out_of_range("Task not found");
+}
+
 
 // TODO Write an == operator overload for the Project class, such that two
 // Project objects are equal only if they have the same identifier and same
@@ -92,6 +189,20 @@
 //  if(pObj1 == pObj2) {
 //    ...
 //  }
+bool operator==(const Project &c1, const Project &c2) {
+    if (c1.getIdent() == c2.getIdent()) {
+        for (auto it = c1.getTasks().begin(); it != c1.getTasks().end(); it++) {
+            Task task = *it;
+            if (!c2.containsTask(task.getIdent())) {
+                return false;
+            }
+        }
+        return true;
+    } else {
+        return false;
+    }
+    
+}
 
 
 // TODO Write a function, str, that takes no parameters and returns a
@@ -102,3 +213,22 @@
 // Example:
 //  Project pObj{"projectIdent"};
 //  std::string s = pObj.str();
+std::string Project::str() const {
+    std::string stringTasks = "{";
+    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
+        Task task = *it;
+        stringTasks == task.str();
+        if ((it + 1) != this->tasks.end()) {
+            stringTasks += ",";
+        } else {
+            stringTasks += "}";
+        }
+    }
+
+    std::stringstream sttr;    
+    sttr << "{" << this->ident << ":" << stringTasks << std::endl;
+    
+    return sttr.str();
+}
+
+

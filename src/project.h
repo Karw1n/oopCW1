@@ -16,6 +16,9 @@
 #include <map>
 #include <string>
 #include <utility>
+#include <stdexcept>
+#include <iostream>
+#include <sstream>
 
 #include "lib_json.hpp"
 
