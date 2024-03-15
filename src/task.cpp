@@ -212,7 +212,7 @@ std::string Task::str() const {
 
 nlohmann::json Task::json() const {
     return {
-        {ident},
+        {"ident", ident},
         {"completed", complete},
         {"dueDate", dueDate.str()},
         {"tags", tags}

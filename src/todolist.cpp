@@ -264,7 +264,6 @@ void TodoList::load(const std::string& fileName) {
                 }
             }
         }
-        file.close();
     } catch(const std::runtime_error& e) {
         throw e;
     }
@@ -293,7 +292,6 @@ void TodoList::save(const std::string& fileName) {
         }
 
         file << projectsJson << std::endl;
-        file.close();
     } catch(const std::runtime_error& e) {
         throw e;
     }
@@ -308,6 +306,9 @@ void TodoList::save(const std::string& fileName) {
 //  if(tObj1 == tObj2) {
 //    ...
 //  }
+bool operator==(const TodoList &c1, const TodoList &c2) {
+    return (c1.projects == c2.projects);
+} 
 
 
 // TODO Write a function, str, that takes no parameters and returns a
@@ -319,3 +320,20 @@ void TodoList::save(const std::string& fileName) {
 // Example:
 //  TodoList tObj{};
 //  std::string s = tObj.str();
+std::string TodoList::str() const {
+    std::string stringProjects = "{";
+    for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
+        Project project = *it;
+        stringProjects == project.str();
+        if ((it + 1) != this->projects.end()) {
+            stringProjects += ",";
+        } else {
+            stringProjects += "}";
+        }
+    }
+
+    std::stringstream sttr;    
+    sttr << "{" << stringProjects << std::endl;
+    
+    return sttr.str();
+}

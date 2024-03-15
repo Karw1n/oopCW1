@@ -30,8 +30,7 @@ using ProjectContainer = std::vector<Project>;
 using json = nlohmann::json;
 
 class TodoList {
-    private:
-        ProjectContainer projects;
+    ProjectContainer projects;
 
     public:
         explicit TodoList();
@@ -46,6 +45,9 @@ class TodoList {
         bool deleteProject(const std::string &tIdent);
         void load(const std::string& fileName);
         void save(const std::string& fileName);
+
+        friend bool operator==(const TodoList &c1, const TodoList &c2);
+        std::string str() const;
 
 };
 
