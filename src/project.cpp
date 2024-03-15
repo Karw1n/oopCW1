@@ -226,7 +226,7 @@ std::string Project::str() const {
     }
 
     std::stringstream sttr;    
-    sttr << "\"" << this->ident << "\":{" << stringTasks << "}";
+    sttr << "\"" << this->ident << "\"" << stringTasks;
     
     return sttr.str();
 }

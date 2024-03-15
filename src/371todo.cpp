@@ -116,9 +116,6 @@ int App::run(int argc, char *argv[]) {
       }
       break;
     }
-
-    default:
-      throw std::runtime_error("unknown action not implemented");
   }
 
   return 0;
