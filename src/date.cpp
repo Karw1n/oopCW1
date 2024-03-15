@@ -76,7 +76,7 @@ bool Date::isInitialised() const {
 std::string Date::str() const {
     if (this->initialized) {
         std::stringstream sttr;
-        sttr << year << "-" << month << "-" << day << std::endl;
+        sttr << year << "-" << month << "-" << day;
         return sttr.str();
     } else {
         return "";

@@ -333,7 +333,7 @@ std::string TodoList::str() const {
     }
 
     std::stringstream sttr;    
-    sttr << "{" << stringProjects << "}" << std::endl;
+    sttr << stringProjects;
     
     return sttr.str();
 }

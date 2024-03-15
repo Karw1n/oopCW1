@@ -204,7 +204,7 @@ std::string Task::str() const {
 
     std::stringstream sttr;    
     sttr << "{" << this->ident << ":{completed:" << this->complete << ",dueDate:" << this->dueDate.str() 
-        << ",tags:" << stringTags << "}" << std::endl;
+        << ",tags:" << stringTags << "}";
     
     return sttr.str();
     
