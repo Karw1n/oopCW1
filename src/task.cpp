@@ -18,7 +18,7 @@
 //
 // Example:
 //  Task tObj{"Task Name"};
-Task::Task(const std::string& identifier) : identifier(identifier) {
+Task::Task(const std::string& ident) : ident(ident) {
     this->setComplete(false);
 }
 
@@ -28,7 +28,7 @@ Task::Task(const std::string& identifier) : identifier(identifier) {
 //  Task tObj{"Task Name"};
 //  auto ident = tObj.getIdent();
 std::string Task::getIdent() const {
-    return identifier;
+    return ident;
 }
 
 const TagContainer &Task::getTags() const noexcept {
@@ -41,8 +41,8 @@ const TagContainer &Task::getTags() const noexcept {
 // Example:
 //  Task tObj{"Task Name"};
 //  auto ident = tObj.setIdent("New Task Name");
-void Task::setIndent(std::string& identifier) {
-    this->identifier = identifier;
+void Task::setIndent(std::string& ident) {
+    this->ident = ident;
 }
 
 // TODO Write a function, addTag, that takes one parameters, a tag
@@ -167,7 +167,7 @@ bool Task::isComplete() const {
 //   ...
 //  }
 bool Task::operator==(const Task& task) const {
-    if (this->identifier == task.getIdent() 
+    if (this->ident == task.getIdent() 
         && this->dueDate == task.getDueDate() 
         && this->complete == task.isComplete()) {
         
@@ -203,13 +203,18 @@ std::string Task::str() const {
     }
 
     std::stringstream sttr;    
-    sttr << "{" << this->identifier << ":{completed:" << this->complete << ",dueDate:" << this->dueDate.str() 
+    sttr << "{" << this->ident << ":{completed:" << this->complete << ",dueDate:" << this->dueDate.str() 
         << ",tags:" << stringTags << "}" << std::endl;
     
     return sttr.str();
     
 }
 
-// std::string Task::getTagAt(unsigned int index) const {
-//     return this->tags.at(index);
-// }
+nlohmann::json Task::json() const {
+    return {
+        {ident},
+        {"completed", complete},
+        {"dueDate", dueDate.str()},
+        {"tags", tags}
+    };
+}

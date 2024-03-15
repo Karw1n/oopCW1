@@ -264,7 +264,7 @@ void TodoList::load(const std::string& fileName) {
                 }
             }
         }
-
+        file.close();
     } catch(const std::runtime_error& e) {
         throw e;
     }
@@ -280,6 +280,24 @@ void TodoList::load(const std::string& fileName) {
 //  tObj.load("database.json");
 //  ...
 //  tObj.save("database.json");
+void TodoList::save(const std::string& fileName) {
+    try { // open the JSON file
+        std::ofstream file(fileName);
+        if (!file.is_open()) {
+            throw std::runtime_error(fileName + " failed to open!");
+        }
+
+        json projectsJson;
+        for (const Project& project : projects) {
+            projectsJson.push_back(project.json());
+        }
+
+        file << projectsJson << std::endl;
+        file.close();
+    } catch(const std::runtime_error& e) {
+        throw e;
+    }
+}
 
 // TODO Write an == operator overload for the TodoList class, such that two
 //  TodoList objects are equal only if they have the exact same data.

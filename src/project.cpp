@@ -231,4 +231,13 @@ std::string Project::str() const {
     return sttr.str();
 }
 
+nlohmann::json Project::json() const {
+    nlohmann::json tasksJson;
+    for (const Task& task : getTasks()) {
+        tasksJson[task.getIdent()] = task.json();
+    }
+    return {
+        {ident, tasksJson}
+        };
+}
 

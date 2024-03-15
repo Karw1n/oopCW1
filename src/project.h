@@ -25,6 +25,7 @@
 #include "task.h"
 
 using TaskContainer = std::vector<Task>;
+using json = nlohmann::json;
 
 class Project {
   std::string ident;

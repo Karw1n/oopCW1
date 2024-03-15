@@ -21,7 +21,7 @@ using TagContainer = std::vector<std::string>;
 
 class Task {
     private:
-        std::string identifier;
+        std::string ident;
         TagContainer tags;
         Date dueDate;
         bool complete;
@@ -42,8 +42,7 @@ class Task {
         bool isComplete() const;
         bool operator==(const Task& task) const;
         std::string str() const;
-
-        //std::string Task::getTagAt(unsigned int index) const;
+        nlohmann::json json() const;
 
 };
 

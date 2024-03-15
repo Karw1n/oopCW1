@@ -45,6 +45,7 @@ class TodoList {
         Project &getProject(const std::string &tIdent);
         bool deleteProject(const std::string &tIdent);
         void load(const std::string& fileName);
+        void save(const std::string& fileName);
 
 };
 
