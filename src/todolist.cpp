@@ -324,7 +324,7 @@ std::string TodoList::str() const {
     std::string stringProjects = "{";
     for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
         Project project = *it;
-        stringProjects == project.str();
+        stringProjects += project.str();
         if ((it + 1) != this->projects.end()) {
             stringProjects += ",";
         } else {
@@ -333,7 +333,7 @@ std::string TodoList::str() const {
     }
 
     std::stringstream sttr;    
-    sttr << "{" << stringProjects << std::endl;
+    sttr << "{" << stringProjects << "}" << std::endl;
     
     return sttr.str();
 }

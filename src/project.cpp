@@ -217,7 +217,7 @@ std::string Project::str() const {
     std::string stringTasks = "{";
     for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
         Task task = *it;
-        stringTasks == task.str();
+        stringTasks += task.str();
         if ((it + 1) != this->tasks.end()) {
             stringTasks += ",";
         } else {
@@ -226,7 +226,7 @@ std::string Project::str() const {
     }
 
     std::stringstream sttr;    
-    sttr << "{" << this->ident << ":" << stringTasks << std::endl;
+    sttr << "{" << this->ident << ":" << stringTasks << "}" << std::endl;
     
     return sttr.str();
 }
