@@ -67,11 +67,9 @@ Task &Project::newTask(const std::string &tIdent) {
         }
     }
 
-    try
-    {
+    try {
         tasks.push_back(Task(tIdent));
-    }
-    catch(const std::runtime_error& e)
+    } catch(const std::runtime_error& e)
     {
         throw e;
     }
@@ -117,18 +115,16 @@ bool Project::containsTask(const std::string &tIdent) const noexcept {
 //  Task tObj{"taskIdent"};
 //  pObj.addItem(tObj);
 bool Project::addTask(Task task) {
-    if (this->containsTask(task.getIdent())) {
-        for (Task aTask : this->tasks) {
-            if (aTask.getIdent() == task.getIdent()) {
-                for (unsigned int i = 0; i < task.numTags(); i++) {
-                    if (!aTask.containsTag(task.getTags().at(i))) {
-                        aTask.addTag(task.getTags().at(i));
-                    }
+    for (Task& aTask : this->tasks) {
+        if (aTask.getIdent() == task.getIdent()) {
+            for (const auto& tag : task.getTags()) {
+                if (!aTask.containsTag(tag)) {
+                    aTask.addTag(tag);
                 }
-                aTask.setComplete(task.isComplete());
-                aTask.setDueDate(task.getDueDate());
-                return false;
             }
+            aTask.setComplete(task.isComplete());
+            aTask.setDueDate(task.getDueDate());
+            return false;
         }
     }   
     this->tasks.push_back(task);
@@ -146,7 +142,7 @@ bool Project::addTask(Task task) {
 //  Project pObj{"projectIdent"};
 //  pObj.newTask("newTaskName");
 //  auto tObj = pObj.getTask("newTaskName");
- Task &Project::getTask(const std::string &tIdent) {
+Task &Project::getTask(const std::string &tIdent) {
     for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
         Task task = *it;
         if (task.getIdent() == tIdent) {
@@ -190,18 +186,22 @@ bool Project::deleteTask(const std::string &tIdent) {
 //    ...
 //  }
 bool operator==(const Project &c1, const Project &c2) {
-    if (c1.getIdent() == c2.getIdent()) {
-        for (auto it = c1.getTasks().begin(); it != c1.getTasks().end(); it++) {
-            Task task = *it;
-            if (!c2.containsTask(task.getIdent())) {
-                return false;
-            }
-        }
-        return true;
-    } else {
+    if (c1.getIdent() != c2.getIdent()) {
         return false;
     }
-    
+
+    for (const Task& task : c1.getTasks()) {
+        if (!c2.containsTask(task.getIdent())) {
+            return false;
+        }
+    }
+
+    for (const Task& task : c2.getTasks()) {
+        if (!c1.containsTask(task.getIdent())) {
+            return false;
+        }
+    }
+    return true;
 }
 
 

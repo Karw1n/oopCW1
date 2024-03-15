@@ -2,7 +2,7 @@
 // CSC371 Advanced Object Oriented Programming (2023/24)
 // Department of Computer Science, Swansea University
 //
-// Author: <STUDENT NUMBER>
+// Author: <2142479>
 //
 // Canvas: https://canvas.swansea.ac.uk/courses/44636
 // -----------------------------------------------------
@@ -14,7 +14,37 @@
 #ifndef TODOLIST_H
 #define TODOLIST_H
 
+#include <map>
+#include <string>
+#include <utility>
+#include <stdexcept>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+#include "lib_json.hpp"
+
+#include "project.h"
+
+using ProjectContainer = std::vector<Project>;
+using json = nlohmann::json;
+
 class TodoList {
+    private:
+        ProjectContainer projects;
+
+    public:
+        explicit TodoList();
+        ~TodoList() = default;
+
+        unsigned int size() const noexcept;
+        Project &newProject(const std::string &tIdent);
+
+        bool addProject(Project project);
+        bool containsProject(const std::string &tIdent) const noexcept;
+        Project &getProject(const std::string &tIdent);
+        bool deleteProject(const std::string &tIdent);
+        void load(const std::string& fileName);
 
 };
 

@@ -166,13 +166,13 @@ bool Task::isComplete() const {
 //  if(tObj1 == tObj2) {
 //   ...
 //  }
-bool Task::operator==(Task& task) const {
+bool Task::operator==(const Task& task) const {
     if (this->identifier == task.getIdent() 
         && this->dueDate == task.getDueDate() 
         && this->complete == task.isComplete()) {
         
         for(auto it = this->tags.begin(); it != this->tags.end(); it++) {
-            if (task.containsTag(*it) != true) {
+            if (!task.containsTag(*it)) {
                 return false;
             }
         }

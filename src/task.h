@@ -40,7 +40,7 @@ class Task {
         void setDueDate(Date date);
         void setComplete(bool aBool);
         bool isComplete() const;
-        bool operator==(Task& task) const;
+        bool operator==(const Task& task) const;
         std::string str() const;
 
         //std::string Task::getTagAt(unsigned int index) const;

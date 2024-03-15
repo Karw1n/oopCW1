@@ -13,6 +13,7 @@
 //
 // Example:
 //  TodoList tObj{};
+TodoList::TodoList() {}
 
 // TODO Write a function, size, that takes no parameters and returns an unsigned
 //  int of the number of projects the TodoList contains.
@@ -20,6 +21,10 @@
 // Example:
 //  TodoList tObj{};
 //  auto size = tObj.size();
+unsigned int TodoList::size() const noexcept {
+    return this->projects.size();
+}
+
 
 // TODO Write a function, newProject, that takes one parameter, a project
 //  identifier, and returns the Project object as a reference. If an object
@@ -30,7 +35,21 @@
 // Example:
 //  TodoList tObj{};
 //  tObj.newProject("projectIdent");
+Project & TodoList::newProject(const std::string &tIdent) {
+    for (auto& project : this->projects) {
+        if (project.getIdent() == tIdent) {
+            return project;
+        }
+    }
 
+    try {
+        projects.push_back(Project(tIdent));
+    } catch(const std::runtime_error& e)
+    {
+        throw e;
+    }
+    return projects.back();
+}
 
 // TODO Write a function, addProject, that takes one parameter, a Project
 //  object, and returns true if the object was successfully inserted. If an
@@ -43,6 +62,37 @@
 //  TodoList tObj{};
 //  Project cObj{"projectIdent"};
 //  tObj.addProject(cObj);
+bool TodoList::addProject(Project project) {
+    for (Project& aProject : this->projects) {
+        if (aProject.getIdent() == project.getIdent()) {
+            for (const auto& task : project.getTasks()) {
+                if (!aProject.containsTask(task.getIdent())) {
+                    aProject.addTask(task);
+                }
+            }
+            return false;
+        }
+    }
+    
+    try {
+        this->projects.push_back(project);
+    } catch(const std::runtime_error& e) {
+        throw e;
+    }
+    return true;
+}
+
+// A function, containsProject, that takes one parameter, a Project 
+// indentifier and returns a bool on whether the project is in the TodoList
+bool TodoList::containsProject(const std::string &tIdent) const noexcept {
+    for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
+        Project project = *it;
+        if (project.getIdent() == tIdent) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // TODO Write a function, getProject, that takes one parameter, a Project
 //  identifier and returns the Project. If no Project exists, throw an
@@ -52,6 +102,16 @@
 //  TodoList tObj{};
 //  tObj.newProject("projectIdent");
 //  auto cObj = tObj.getProject("projectIdent");
+Project &TodoList::getProject(const std::string &tIdent) {
+    for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
+        Project project = *it;
+        if (project.getIdent() == tIdent) {
+            return *it;
+        }
+    }
+    throw std::out_of_range("Project not found");
+
+}
 
 // TODO Write a function, deleteProject, that takes one parameter, a Project
 //  identifier, and deletes it from the container, and returns true if the
@@ -61,6 +121,18 @@
 //  TodoList tObj{};
 //  tObj.newProject("projectIdent");
 //  tObj.deleteProject("projectIdent");
+bool TodoList::deleteProject(const std::string &tIdent) {
+    for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
+        Project project = *it;
+        if (project.getIdent() == tIdent) {
+            this->projects.erase(it);
+            return true;
+        }
+    }
+    throw std::out_of_range("Project not found");
+}
+
+
 
 // TODO Write a function, load, that takes one parameter, a std::string,
 //  containing the filename for the database. Open the file, read the contents,
@@ -131,6 +203,73 @@
 // Example:
 //  TodoList tObj{};
 //  tObj.load("database.json");
+void TodoList::load(const std::string& fileName) {
+    try { // open the JSON file
+        std::ifstream file(fileName);
+        if (!file.is_open()) {
+            throw std::runtime_error(fileName + " failed to open!");
+        }
+
+        json data = json::parse(file);
+
+        for (auto projectIt = data.begin(); projectIt != data.end(); projectIt++) {
+            std::string projectIdent = projectIt.key();
+            
+            if (!containsProject(projectIdent)) {
+                Project newProject = Project(projectIdent);
+                for (auto taskIt = projectIt.value().begin(); taskIt != projectIt.value().end(); taskIt++) {
+                    std::string taskIdent = taskIt.key();
+                    json taskMembers = taskIt.value();
+                    
+                    if (!newProject.containsTask(taskIdent)) {
+                        Task newTask = Task(taskIdent);
+                        newTask.setComplete(taskMembers["completed"]);
+                        std::string dueDate = taskMembers.value("due", "0000-00-00");
+                            Date date = Date();
+                        if (!(dueDate == "0000-00-00")) {
+                            date.setDateFromString(dueDate);
+                        }
+                        newTask.setDueDate(date);
+                        
+                        for (const auto& tag : taskMembers["tags"]) {
+                            newTask.addTag(tag);
+                        }
+
+                        newProject.addTask(newTask);
+                    } else { // Merge task
+                        TaskContainer::iterator it = newProject.findTask(taskIdent);
+                        Task& existingTask = *it;
+                        for (const auto& tag : taskMembers["tags"]) {        
+                            existingTask.addTag(tag);
+                        }
+                    }
+                }
+                this->addProject(newProject);
+            } else { // Merge Projects
+                Project& existingProject = getProject(projectIdent);
+                for (auto taskIt = projectIt.value().begin(); taskIt != projectIt.value().end(); taskIt++) {
+                    std::string taskIdent = taskIt.key();
+                    json taskMembers = taskIt.value();
+                    Task newTask = Task(taskIdent);
+                    std::string dueDate = taskMembers.value("due", "0000-00-00");
+                    Date date = Date();
+                        if (!(dueDate == "0000-00-00")) {
+                            date.setDateFromString(dueDate);
+                        }
+                    newTask.setDueDate(date);
+                    for (const auto& tag : taskMembers["tags"]) {
+                        newTask.addTag(tag);
+                    }
+                    existingProject.addTask(newTask);
+                }
+            }
+        }
+
+    } catch(const std::runtime_error& e) {
+        throw e;
+    }
+}
+
 
 // TODO Write a function, save, that takes one parameter, the path of the file
 //  to write the database to. The function should serialise the TodoList object
