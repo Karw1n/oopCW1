@@ -52,6 +52,7 @@ int App::run(int argc, char *argv[]) {
   const Action a = parseActionArgument(args);
   switch (a) {
     case Action::CREATE:
+      
       throw std::runtime_error("create not implemented");
       break;
 
@@ -145,8 +146,21 @@ cxxopts::Options App::cxxoptsSetup() {
 //  auto args = options.parse(argc, argv);
 //  App::Action action = parseActionArgument(args);
 App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
+  // enum Action { CREATE, JSON, DELETE, UPDATE };
   std::string input = args["action"].as<std::string>();
-  return Action::JSON;
+  // Convert string to lowercase
+  std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+  if (input == "create") {
+    return Action::CREATE;
+  } else if (input == "json") {
+    return Action::JSON;
+  } else if (input == "delete") {
+    return Action::DELETE;
+  } else if (input == "update") {
+    return Action::UPDATE;
+  } else {
+    throw std::invalid_argument("action");
+  }
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
