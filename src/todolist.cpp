@@ -224,7 +224,7 @@ void TodoList::load(const std::string& fileName) {
                     if (!newProject.containsTask(taskIdent)) {
                         Task newTask = Task(taskIdent);
                         newTask.setComplete(taskMembers["completed"]);
-                        std::string dueDate = taskMembers.value("due", "0000-00-00");
+                        std::string dueDate = taskMembers.value("dueDate", "0000-00-00");
                             Date date = Date();
                         if (!(dueDate == "0000-00-00")) {
                             date.setDateFromString(dueDate);
@@ -251,7 +251,7 @@ void TodoList::load(const std::string& fileName) {
                     std::string taskIdent = taskIt.key();
                     json taskMembers = taskIt.value();
                     Task newTask = Task(taskIdent);
-                    std::string dueDate = taskMembers.value("due", "0000-00-00");
+                    std::string dueDate = taskMembers.value("dueDate", "0000-00-00");
                     Date date = Date();
                         if (!(dueDate == "0000-00-00")) {
                             date.setDateFromString(dueDate);
