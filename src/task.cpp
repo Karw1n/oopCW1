@@ -194,17 +194,23 @@ std::string Task::str() const {
 
     std::string stringTags = "[";
     for (auto it = this->tags.begin(); it != this->tags.end(); it++) {
-        stringTags += *it;
+        stringTags += "\"" + *it + "\"";
         if ((it + 1) != this->tags.end()) {
             stringTags += ",";
         } else {
             stringTags += "]";
         }
     }
+    std::string completeString;
+    if (this->complete) {
+        completeString = "true";
+    } else {
+        completeString = "false";
+    }
 
     std::stringstream sttr;    
-    sttr << "{" << this->ident << ":{completed:" << this->complete << ",dueDate:" << this->dueDate.str() 
-        << ",tags:" << stringTags << "}";
+    sttr << "{\"" << this->ident << "\":{\"completed\":\"" << completeString << "\",\"dueDate\":\"" << this->dueDate.str() 
+        << "\",\"tags\":" << stringTags << "}";
     
     return sttr.str();
     
