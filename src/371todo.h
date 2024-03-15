@@ -54,6 +54,9 @@ std::string getJSON(TodoList &tl, const std::string &p, const std::string &t);
 std::string getJSON(TodoList &tl, const std::string &p, const std::string &task,
                     const std::string &tag);
 
+std::vector<std::string> splitTags(const std::string& stringTags);
+
+
 } // namespace App
 
 #endif // _371TODO_H

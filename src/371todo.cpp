@@ -51,22 +51,71 @@ int App::run(int argc, char *argv[]) {
 
   const Action a = parseActionArgument(args);
   switch (a) {
-    case Action::CREATE:
-      
-      throw std::runtime_error("create not implemented");
-      break;
+    case Action::CREATE: {
+      std::string projectIdent = args["project"].as<std::string>();
+      std::string taskIdent = args["task"].as<std::string>();
+      std::vector<std::string> tags = splitTags(args["tag"].as<std::string>());
 
-    case Action::JSON:
-      throw std::runtime_error("json not implemented");
-      break;
+      if (tlObj.containsProject(projectIdent)) {
+        Task newTask = Task(taskIdent);
+        for (const std::string& tag : tags) {
+          newTask.addTag(tag);
+        }
 
-    case Action::UPDATE:
-      throw std::runtime_error("update not implemented");
+        tlObj.getProject(projectIdent).addTask(newTask);
+      } else {
+        Project newProject = Project(projectIdent);
+        Task newTask = Task(taskIdent);
+        for (const std::string& tag : tags) {
+          newTask.addTag(tag);
+        }
+        newProject.addTask(newTask);
+        tlObj.addProject(newProject);
+      }
+      tlObj.save(db);
       break;
+    }
+    case Action::JSON: {
+      std::cout << tlObj.str() << std::endl;
+      tlObj.save(db);
+      break;
+    }
+    case Action::UPDATE: {
+      std::string projectIdent = args["project"].as<std::string>();
+      std::string taskIdent = args["task"].as<std::string>();
 
-    case Action::DELETE:
-      throw std::runtime_error("delete not implemented");
+      // If --completed flag is provided
+      if (args.count("completed")) {
+        bool completed = args["completed"].as<bool>();
+        tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(completed);
+      }
+
+      // If --due flag is provided
+      if (args.count("dueDate")) {
+        std::string dueDateStr = args["due"].as<std::string>();
+        Date dueDate;
+        dueDate.setDateFromString(dueDateStr);
+        tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
+      }
+      tlObj.save(db);
       break;
+    }
+    case Action::DELETE: {
+      std::string projectIdent = args["project"].as<std::string>();
+
+      if (args.count("tag") && args.count("task")) {
+        std::string taskIdent = args["task"].as<std::string>();
+        // Doesn't check if there are multiple tags
+        std::string tag = args["tag"].as<std::string>();
+        tlObj.getProject(projectIdent).getTask(taskIdent).deleteTag(tag);
+      } else if (args.count("task")) {
+        std::string taskIdent = args["task"].as<std::string>();
+        tlObj.getProject(projectIdent).deleteTask(taskIdent);
+      } else {
+        tlObj.deleteProject(projectIdent);
+      }
+      break;
+    }
 
     default:
       throw std::runtime_error("unknown action not implemented");
@@ -245,3 +294,16 @@ std::string App::getJSON(TodoList &tlObj, const std::string &p,
     return "";
   }
 }
+
+// A helper function to convert the single string input of tags into 
+// a list of tags.
+std::vector<std::string> App::splitTags(const std::string& stringTags) {
+  std::vector<std::string> tags;
+  std::stringstream stringStream(stringTags);
+  std::string tag;
+  while (std::getline(stringStream, tag, ',')) {
+      tags.push_back(tag);
+  }
+  return tags;
+}
+
