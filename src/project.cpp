@@ -214,7 +214,7 @@ bool operator==(const Project &c1, const Project &c2) {
 //  Project pObj{"projectIdent"};
 //  std::string s = pObj.str();
 std::string Project::str() const {
-    std::string stringTasks = "{\"" + ident + "\":{";
+    std::string stringTasks;
     for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
         Task task = *it;
         stringTasks += task.str();
@@ -226,18 +226,16 @@ std::string Project::str() const {
     }
 
     std::stringstream sttr;    
-    sttr << "\"" << this->ident << "\":" << stringTasks;
+    sttr << "\"" << this->ident << "\":{" << stringTasks << "}";
     
     return sttr.str();
 }
 
 nlohmann::json Project::json() const {
-    nlohmann::json tasksJson;
+    nlohmann::json projectJson;
     for (const Task& task : tasks) {
-        tasksJson[task.getIdent()] = task.json();
+        projectJson[task.getIdent()] = task.json();
     }
-    return {
-        {ident, tasksJson}
-        };
+    return projectJson;
 }
 

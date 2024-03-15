@@ -209,7 +209,7 @@ std::string Task::str() const {
     }
 
     std::stringstream sttr;    
-    sttr << "{\"" << this->ident << "\":{\"completed\":\"" << completeString << "\",\"dueDate\":\"" << this->dueDate.str() 
+    sttr << "{\"" << this->ident << "\":{\"completed\":" << completeString << ",\"dueDate\":\"" << this->dueDate.str() 
         << "\",\"tags\":" << stringTags << "}";
     
     return sttr.str();
@@ -218,7 +218,6 @@ std::string Task::str() const {
 
 nlohmann::json Task::json() const {
     return {
-        {"ident", ident},
         {"completed", complete},
         {"dueDate", dueDate.str()},
         {"tags", tags}
