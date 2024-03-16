@@ -116,20 +116,37 @@ int App::run(int argc, char *argv[]) {
       break;
     }
     case Action::DELETE: {
-      std::string projectIdent = args["project"].as<std::string>();
 
-      if (args.count("tag") && args.count("task")) {
+      if (args.count("project") && args.count("task") && args.count("tag")) {
+        std::string projectIdent = args["project"].as<std::string>();
         std::string taskIdent = args["task"].as<std::string>();
-        // Doesn't check if there are multiple tags
         std::string tag = args["tag"].as<std::string>();
-        tlObj.getProject(projectIdent).getTask(taskIdent).deleteTag(tag);
-      } else if (args.count("task")) {
+
+        if (tlObj.getProject(projectIdent).getTask(taskIdent).containsTag(tag)) {
+          tlObj.getProject(projectIdent).getTask(taskIdent).deleteTag(tag);
+        } else {
+          std::cerr << "Error: Tag: " << tag << " not found." << std::endl;
+          return 1;
+        }
+      } else if (args.count("project") && args.count("task")) {
+        std::string projectIdent = args["project"].as<std::string>();
         std::string taskIdent = args["task"].as<std::string>();
-        tlObj.getProject(projectIdent).deleteTask(taskIdent);
+
+        if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+          tlObj.getProject(projectIdent).deleteTask(taskIdent);
+        } else {
+          std::cerr << "Error: Task: " << taskIdent << " not found." << std::endl;
+          return 1;
+        }
       } else if (args.count("project")) {
-        tlObj.deleteProject(projectIdent);
+        std::string projectIdent = args["project"].as<std::string>();
+        if (tlObj.containsProject(projectIdent)) {
+          tlObj.deleteProject(projectIdent);
+        } else {
+          std::cerr << "Error: Project: " << projectIdent << " not found." << std::endl;
+          return 1;
+        }
       }
-      break;
     }
   }
 

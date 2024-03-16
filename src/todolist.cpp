@@ -128,7 +128,7 @@ Project& TodoList::getProject(const std::string &tIdent) {
 //  tObj.deleteProject("projectIdent");
 bool TodoList::deleteProject(const std::string &tIdent) {
     for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
-        Project project = *it;
+        Project& project = *it;
         if (project.getIdent() == tIdent) {
             this->projects.erase(it);
             return true;
@@ -229,12 +229,12 @@ void TodoList::load(const std::string& fileName) {
                     if (!newProject.containsTask(taskIdent)) {
                         Task newTask = Task(taskIdent);
                         newTask.setComplete(taskMembers["completed"]);
-                        std::string dueDate = taskMembers.value("due", "0000-00-00");
-                            Date date = Date();
+                        std::string dueDate = taskMembers.value("dueDate", "0000-00-00");
+                        Date date = Date();
                         if (!(dueDate == "0000-00-00")) {
                             date.setDateFromString(dueDate);
+                            newTask.setDueDate(date);
                         }
-                        newTask.setDueDate(date);
                         
                         for (const auto& tag : taskMembers["tags"]) {
                             newTask.addTag(tag);
@@ -256,7 +256,7 @@ void TodoList::load(const std::string& fileName) {
                     std::string taskIdent = taskIt.key();
                     json taskMembers = taskIt.value();
                     Task newTask = Task(taskIdent);
-                    std::string dueDate = taskMembers.value("due", "0000-00-00");
+                    std::string dueDate = taskMembers.value("dueDate", "0000-00-00");
                     Date date = Date();
                         if (!(dueDate == "0000-00-00")) {
                             date.setDateFromString(dueDate);
@@ -292,7 +292,7 @@ void TodoList::save(const std::string& fileName) {
     }
 
     json projectsJson;
-    for (const Project& project : projects) {
+    for (Project& project : projects) {
         json projectJson;  
         for (const Task& task : project.getTasks()) {
             projectJson[task.getIdent()] = task.json();

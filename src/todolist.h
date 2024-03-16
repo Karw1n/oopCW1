@@ -37,11 +37,11 @@ class TodoList {
         ~TodoList() = default;
 
         unsigned int size() const noexcept;
-        Project &newProject(const std::string &tIdent);
+        Project& newProject(const std::string &tIdent);
 
         bool addProject(Project project);
         bool containsProject(const std::string &tIdent) const noexcept;
-        Project &getProject(const std::string &tIdent);
+        Project& getProject(const std::string &tIdent);
         bool deleteProject(const std::string &tIdent);
         void load(const std::string& fileName);
         void save(const std::string& fileName);
