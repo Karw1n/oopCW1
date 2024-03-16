@@ -133,7 +133,6 @@ int App::run(int argc, char *argv[]) {
               return 1;
             }
         }
-          // If --due flag is provided
         if (args.count("due")) {
             std::string dueDateStr = args["due"].as<std::string>();
             Date dueDate;
@@ -180,6 +179,8 @@ int App::run(int argc, char *argv[]) {
           std::cerr << "Error: Project: " << projectIdent << " not found." << std::endl;
           return 1;
         }
+        tlObj.save(db);
+        break;
       }
     }
   }

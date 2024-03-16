@@ -37,20 +37,12 @@ void Date::setDateFromString(const std::string& date) {
         
         
         if (month > 12 || day > 31 || month < 1 || day < 1) {
-            initialized = false;
-            year = 0;
-            month = 0;
-            day = 0;
             throw std::invalid_argument("Incorrect date entered.");
-        }
-
-        try {
-            this->year = year;
-            this->month = month;
-            this->day = day;
-            this->initialized = initialized;
-        } catch (const std::invalid_argument& e) {
-            throw std::invalid_argument("Invalid date format: " + std::string(e.what()));
+        } else {
+            this->year = std::stoi(date.substr(0, 4));
+            this->month = std::stoi(date.substr(5, 2));
+            this->day = std::stoi(date.substr(8, 2));
+            this->initialized = true;
         }
     } 
 }
