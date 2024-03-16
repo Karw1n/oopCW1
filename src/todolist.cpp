@@ -103,14 +103,17 @@ bool TodoList::containsProject(const std::string &tIdent) const noexcept {
 //  tObj.newProject("projectIdent");
 //  auto cObj = tObj.getProject("projectIdent");
 Project &TodoList::getProject(const std::string &tIdent) {
+    if (this->projects.empty()) {
+        throw std::out_of_range("Project list is empty");
+    }
+
     for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
-        Project project = *it;
+        Project& project = *it;
         if (project.getIdent() == tIdent) {
             return *it;
         }
     }
     throw std::out_of_range("Project not found");
-
 }
 
 // TODO Write a function, deleteProject, that takes one parameter, a Project

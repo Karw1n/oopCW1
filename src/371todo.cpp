@@ -52,24 +52,38 @@ int App::run(int argc, char *argv[]) {
   const Action a = parseActionArgument(args);
   switch (a) {
     case Action::CREATE: {
+
       std::string projectIdent = args["project"].as<std::string>();
-      std::string taskIdent = args["task"].as<std::string>();
-      std::vector<std::string> tags = splitTags(args["tag"].as<std::string>());
-
+      
+      std::string taskIdent;
+      std::vector<std::string> tags;
+      
       if (tlObj.containsProject(projectIdent)) {
-        Task newTask = Task(taskIdent);
-        for (const std::string& tag : tags) {
-          newTask.addTag(tag);
+        if (args["task"].count()) {
+          taskIdent = args["task"].as<std::string>();
+          Task newTask = Task(taskIdent);
+          if (args["tag"].count()) {
+            tags = splitTags(args["tag"].as<std::string>());
+            for (const std::string& tag : tags) {
+              newTask.addTag(tag);
+            }
+          }
+          tlObj.getProject(projectIdent).addTask(newTask);
         }
-
-        tlObj.getProject(projectIdent).addTask(newTask);
+        
       } else {
         Project newProject = Project(projectIdent);
-        Task newTask = Task(taskIdent);
-        for (const std::string& tag : tags) {
-          newTask.addTag(tag);
+        if (args["task"].count()) {
+          taskIdent = args["task"].as<std::string>();
+          Task newTask = Task(taskIdent);
+          if (args["tag"].count()) {
+            tags = splitTags(args["tag"].as<std::string>());
+            for (const std::string& tag : tags) {
+              newTask.addTag(tag);
+            }
+          }
+          newProject.addTask(newTask);
         }
-        newProject.addTask(newTask);
         tlObj.addProject(newProject);
       }
       tlObj.save(db);
@@ -82,6 +96,7 @@ int App::run(int argc, char *argv[]) {
     }
     case Action::UPDATE: {
       std::string projectIdent = args["project"].as<std::string>();
+      
       std::string taskIdent = args["task"].as<std::string>();
 
       // If --completed flag is provided
@@ -111,7 +126,7 @@ int App::run(int argc, char *argv[]) {
       } else if (args.count("task")) {
         std::string taskIdent = args["task"].as<std::string>();
         tlObj.getProject(projectIdent).deleteTask(taskIdent);
-      } else {
+      } else if (args.count("project")) {
         tlObj.deleteProject(projectIdent);
       }
       break;
@@ -143,7 +158,7 @@ cxxopts::Options App::cxxoptsSetup() {
       cxxopts::value<std::string>())(
 
       "task",
-      "Apply action (create, json, update, detele) to a task. If you want to add "
+      "Apply action (create, json, update, delete) to a task. If you want to add "
       "a task, set the action argument to 'create', the project argument to your "
       "chosen project identifier and the task argument to the task identifier).",
 
@@ -171,7 +186,7 @@ cxxopts::Options App::cxxoptsSetup() {
       "with the completed flag",
       cxxopts::value<bool>())(
 
-      "due",
+      "dueDate",
       "When creating or updating a task, set the due date flag to change the "
       "task's due date to the one specified as an argument (e.g. '2024-11-23')."
       "Ommitting the argument removes the due date from the task.",
@@ -238,7 +253,6 @@ std::string App::getJSON(TodoList &tlObj) {
 //  std::string p = "project argument value";
 //  std::cout << getJSON(tlObj, p);
 std::string App::getJSON(TodoList &tlObj, const std::string &p) {
-  return "{}";
   // Only uncomment this once you have implemented the functions used!
   auto pObj = tlObj.getProject(p);
   return pObj.str();

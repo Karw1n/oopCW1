@@ -143,14 +143,18 @@ bool Project::addTask(Task task) {
 //  pObj.newTask("newTaskName");
 //  auto tObj = pObj.getTask("newTaskName");
 Task &Project::getTask(const std::string &tIdent) {
-    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
-        Task task = *it;
+    if (this->tasks.empty()) {
+        throw std::out_of_range("Task list is empty");
+    }
+
+    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {    
+        Task& task = *it;
         if (task.getIdent() == tIdent) {
             return *it;
         }
     }
     throw std::out_of_range("Task not found");
- }
+}
 
 
 
@@ -226,7 +230,7 @@ std::string Project::str() const {
     }
 
     std::stringstream sttr;    
-    sttr << "\"" << this->ident << "\"" << stringTasks;
+    sttr << "\"" << this->ident << "\":" << stringTasks;
     
     return sttr.str();
 }
