@@ -118,6 +118,12 @@ Project& TodoList::getProject(const std::string &tIdent) {
     throw std::out_of_range("Project not found");
 }
 
+
+const ProjectContainer& TodoList::getProjects() const noexcept {
+    return projects;
+}
+
+
 // TODO Write a function, deleteProject, that takes one parameter, a Project
 //  identifier, and deletes it from the container, and returns true if the
 //  Project was deleted. If no Project exists, throw an appropriate exception.
@@ -316,7 +322,7 @@ void TodoList::save(const std::string& fileName) {
 //    ...
 //  }
 bool operator==(const TodoList &c1, const TodoList &c2) {
-    return (c1.projects == c2.projects);
+    return (c1.getProjects() == c2.getProjects());
 } 
 
 

@@ -6,3 +6,6 @@ During the development of the project I think I became more efficient with my co
 
 In 371todo.cpp:
 I created a helper functions for 
+
+In todolist.cpp:
+Created the function getProjects() which returns the list. 

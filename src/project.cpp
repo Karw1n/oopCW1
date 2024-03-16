@@ -47,8 +47,8 @@ void Project::setIdent(std::string pIdent) noexcept {
 }
 
 // A function that returns the TaskContainer
-const TaskContainer & Project::getTasks() const noexcept {
-    return this->tasks;
+const TaskContainer& Project::getTasks() const noexcept {
+    return tasks;
 }
 
 // TODO Write a function, newTask, that takes one parameter, a Task identifier,
