@@ -107,12 +107,10 @@ Project& TodoList::getProject(const std::string &tIdent) {
         throw std::out_of_range("Project list is empty");
     }
 
-    for (auto it = projects.begin(); it != projects.end(); it++) {
+    for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
         Project& project = *it;
         if (project.getIdent() == tIdent) {
-            return *it;
-        } else if (it++ == projects.end()){
-            throw std::out_of_range("Project not found in projects");
+            return project;
         }
     }
     throw std::out_of_range("Project not found");
@@ -322,7 +320,24 @@ void TodoList::save(const std::string& fileName) {
 //    ...
 //  }
 bool operator==(const TodoList &c1, const TodoList &c2) {
-    return (c1.getProjects() == c2.getProjects());
+    if (c1.size() != c2.size()) {
+        return false;
+    }
+
+    for (const Project& project : c1.getProjects()) {
+        if (!(c2.containsProject(project.getIdent()))) {
+            return false;
+        }
+    }
+
+    for (const Project& project : c2.getProjects()) {
+        if (!(c1.containsProject(project.getIdent()))) {
+            return false;
+        }
+    }
+
+
+    return true;
 } 
 
 
