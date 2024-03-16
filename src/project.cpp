@@ -147,7 +147,7 @@ Task& Project::getTask(const std::string &tIdent) {
         throw std::out_of_range("Task list is empty");
     }
 
-    for (auto it = tasks.begin(); it != tasks.end(); it++) {    
+    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {    
         Task& task = *it;
         if (task.getIdent() == tIdent) {
             return *it;

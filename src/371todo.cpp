@@ -52,42 +52,36 @@ int App::run(int argc, char *argv[]) {
   const Action a = parseActionArgument(args);
   switch (a) {
     case Action::CREATE: {
-
-      std::string projectIdent = args["project"].as<std::string>();
-      
-      std::string taskIdent;
-      std::vector<std::string> tags;
-      
-      if (tlObj.containsProject(projectIdent)) {
-        if (args["task"].count()) {
-          taskIdent = args["task"].as<std::string>();
-          Task newTask = Task(taskIdent);
-          if (args["tag"].count()) {
-            tags = splitTags(args["tag"].as<std::string>());
-            for (const std::string& tag : tags) {
-              newTask.addTag(tag);
-            }
-          }
-          tlObj.getProject(projectIdent).addTask(newTask);
+      if (args["project"].count() && args["task"].count() && args["tag"].count()) {
+        std::string projectIdent = args["project"].as<std::string>();
+        std::string taskIdent = args["task"].as<std::string>();
+        std::vector<std::string> tags = splitTags(args["tag"].as<std::string>());
+        tlObj.newProject(projectIdent);
+        tlObj.getProject(projectIdent).newTask(taskIdent);
+        for (std::string tag : tags) {
+          tlObj.getProject(projectIdent).getTask(taskIdent).addTag(tag);
         }
         
-      } else {
-        Project newProject = Project(projectIdent);
-        if (args["task"].count()) {
-          taskIdent = args["task"].as<std::string>();
-          Task newTask = Task(taskIdent);
-          if (args["tag"].count()) {
-            tags = splitTags(args["tag"].as<std::string>());
-            for (const std::string& tag : tags) {
-              newTask.addTag(tag);
-            }
-          }
-          newProject.addTask(newTask);
+        if (args["due"].count()) {
+          std::string dateAsString = args["due"].as<std::string>();
+          Date date = Date();
+          date.setDateFromString(dateAsString);
+          tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(date);
+        } else if (!args["due"].count()) {
+          Date date = Date();
+          tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(date);
         }
-        tlObj.addProject(newProject);
+
+        if (args["completed"].count()) {
+          tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(true);
+        } 
+
+        if (args["incomplete"].count()) {
+          tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
+        }
+        tlObj.save(db);
+        break;
       }
-      tlObj.save(db);
-      break;
     }
     case Action::JSON: {
       std::cout << tlObj.str() << std::endl;
@@ -95,25 +89,65 @@ int App::run(int argc, char *argv[]) {
       break;
     }
     case Action::UPDATE: {
-      std::string projectIdent = args["project"].as<std::string>();
-      
-      std::string taskIdent = args["task"].as<std::string>();
+      if (args["project"].count() && args["task"].count()) {
+        std::string projectIdent = args["project"].as<std::string>();
+        std::string taskIdent = args["task"].as<std::string>();
+        if (projectIdent.find(':') != std::string::npos) {
+          std::string oldIdent = projectIdent.substr(0, projectIdent.find(':'));
+          std::string newIdent = projectIdent.substr(projectIdent.find(':') + 1);
+          if (tlObj.containsProject(oldIdent)) {
+            tlObj.getProject(oldIdent).setIdent(newIdent);
+            projectIdent = newIdent;
+          } else {
+            std::cerr << "Project not found." << std::endl;
+            return 1;
+          }
+        }
 
-      // If --completed flag is provided
-      if (args.count("completed")) {
-        bool completed = args["completed"].as<bool>();
-        tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(completed);
-      }
+        if (taskIdent.find(':') != std::string::npos) {
+          std::string oldIdent = taskIdent.substr(0, taskIdent.find(':'));
+          std::string newIdent = taskIdent.substr(taskIdent.find(':') + 1);
+          if (tlObj.getProject(projectIdent).containsTask(oldIdent)) {
+            tlObj.getProject(projectIdent).getTask(oldIdent).setIndent(newIdent);
+            taskIdent = newIdent;
+          } else {
+            std::cerr << "Task not found." << std::endl;
+            return 1;
+          }
+        }
 
-      // If --due flag is provided
-      if (args.count("dueDate")) {
-        std::string dueDateStr = args["due"].as<std::string>();
-        Date dueDate;
-        dueDate.setDateFromString(dueDateStr);
-        tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
+        if (args.count("completed")) {
+            if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+              tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(true);
+            } else {
+              std::cerr << "Error project or task not found." << std::endl;
+              return 1;
+            }
+        }
+
+        if (args.count("incomplete")) {
+            if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+              tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
+            } else {
+              std::cerr << "Error project or task not found." << std::endl;
+              return 1;
+            }
+        }
+          // If --due flag is provided
+        if (args.count("due")) {
+            std::string dueDateStr = args["due"].as<std::string>();
+            Date dueDate;
+            try {
+              dueDate.setDateFromString(dueDateStr);
+            } catch (std::invalid_argument& e) {
+              std::cerr << "Incorrect date entered." << std::endl;
+              return 1;
+            }
+            tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
+        }
+        tlObj.save(db);
+        break;
       }
-      tlObj.save(db);
-      break;
     }
     case Action::DELETE: {
 
