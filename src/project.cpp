@@ -142,12 +142,12 @@ bool Project::addTask(Task task) {
 //  Project pObj{"projectIdent"};
 //  pObj.newTask("newTaskName");
 //  auto tObj = pObj.getTask("newTaskName");
-Task &Project::getTask(const std::string &tIdent) {
+Task& Project::getTask(const std::string &tIdent) {
     if (this->tasks.empty()) {
         throw std::out_of_range("Task list is empty");
     }
 
-    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {    
+    for (auto it = tasks.begin(); it != tasks.end(); it++) {    
         Task& task = *it;
         if (task.getIdent() == tIdent) {
             return *it;

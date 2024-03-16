@@ -186,7 +186,7 @@ cxxopts::Options App::cxxoptsSetup() {
       "with the completed flag",
       cxxopts::value<bool>())(
 
-      "dueDate",
+      "due",
       "When creating or updating a task, set the due date flag to change the "
       "task's due date to the one specified as an argument (e.g. '2024-11-23')."
       "Ommitting the argument removes the due date from the task.",

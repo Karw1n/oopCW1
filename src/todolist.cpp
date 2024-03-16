@@ -102,15 +102,17 @@ bool TodoList::containsProject(const std::string &tIdent) const noexcept {
 //  TodoList tObj{};
 //  tObj.newProject("projectIdent");
 //  auto cObj = tObj.getProject("projectIdent");
-Project &TodoList::getProject(const std::string &tIdent) {
+Project& TodoList::getProject(const std::string &tIdent) {
     if (this->projects.empty()) {
         throw std::out_of_range("Project list is empty");
     }
 
-    for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
+    for (auto it = projects.begin(); it != projects.end(); it++) {
         Project& project = *it;
         if (project.getIdent() == tIdent) {
             return *it;
+        } else if (it++ == projects.end()){
+            throw std::out_of_range("Project not found in projects");
         }
     }
     throw std::out_of_range("Project not found");
@@ -227,7 +229,7 @@ void TodoList::load(const std::string& fileName) {
                     if (!newProject.containsTask(taskIdent)) {
                         Task newTask = Task(taskIdent);
                         newTask.setComplete(taskMembers["completed"]);
-                        std::string dueDate = taskMembers.value("dueDate", "0000-00-00");
+                        std::string dueDate = taskMembers.value("due", "0000-00-00");
                             Date date = Date();
                         if (!(dueDate == "0000-00-00")) {
                             date.setDateFromString(dueDate);
@@ -254,7 +256,7 @@ void TodoList::load(const std::string& fileName) {
                     std::string taskIdent = taskIt.key();
                     json taskMembers = taskIt.value();
                     Task newTask = Task(taskIdent);
-                    std::string dueDate = taskMembers.value("dueDate", "0000-00-00");
+                    std::string dueDate = taskMembers.value("due", "0000-00-00");
                     Date date = Date();
                         if (!(dueDate == "0000-00-00")) {
                             date.setDateFromString(dueDate);
