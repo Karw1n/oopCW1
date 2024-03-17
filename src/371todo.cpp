@@ -120,6 +120,8 @@ int App::run(int argc, char *argv[]) {
           std::cerr << "Error Project " << projectIdent << " not found." << std::endl;
           return 1;
         }
+      } else if (!args.count("project")) {
+        std::cerr << "Error: missing project argument(s)." << std::endl;
       } else {
         std::cout << tlObj.json() << std::endl;
       }
