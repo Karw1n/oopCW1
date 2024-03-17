@@ -2,7 +2,7 @@
 // CSC371 Advanced Object Oriented Programming (2023/24)
 // Department of Computer Science, Swansea University
 //
-// Author: <214279>
+// Author: <2142479>
 //
 // Canvas: https://canvas.swansea.ac.uk/courses/44636
 // -----------------------------------------------------
@@ -30,18 +30,17 @@ void Date::setDateFromString(const std::string& date) {
             throw std::invalid_argument("Incorrect date string formated entered. Correct format: YYYY-MM-DD.");
         }
 
-        year = std::stoi(date.substr(0, 4));
-        month = std::stoi(date.substr(5, 2));
-        day = std::stoi(date.substr(8, 2));
-        initialized = true;
+        unsigned int theYear = std::stoi(date.substr(0, 4));
+        unsigned int theMonth = std::stoi(date.substr(5, 2));
+        unsigned int theDay = std::stoi(date.substr(8, 2));
         
-        
-        if (month > 12 || day > 31 || month < 1 || day < 1) {
+        if (theMonth > 12 || theDay > 31 || theMonth < 1 || theDay < 1) {   
+            this->initialized = false;
             throw std::invalid_argument("Incorrect date entered.");
         } else {
-            this->year = std::stoi(date.substr(0, 4));
-            this->month = std::stoi(date.substr(5, 2));
-            this->day = std::stoi(date.substr(8, 2));
+            this->year = theYear;
+            this->month = theMonth;
+            this->day = theDay;
             this->initialized = true;
         }
     } 
