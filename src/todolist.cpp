@@ -213,7 +213,7 @@ bool TodoList::deleteProject(const std::string &tIdent) {
 //  TodoList tObj{};
 //  tObj.load("database.json");
 void TodoList::load(const std::string& fileName) {
-    try { // open the JSON file
+    // open the JSON file
         std::ifstream file(fileName);
         if (!file.is_open()) {
             throw std::runtime_error(fileName + " failed to open!");
@@ -273,10 +273,8 @@ void TodoList::load(const std::string& fileName) {
                 }
             }
         }
-    } catch(const std::runtime_error& e) {
-        throw e;
-    }
 }
+
 
 
 // TODO Write a function, save, that takes one parameter, the path of the file
