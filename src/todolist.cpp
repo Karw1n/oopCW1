@@ -75,7 +75,7 @@ bool TodoList::addProject(Project project) {
     }
     
     try {
-        this->projects.push_back(project);
+        projects.push_back(project);
     } catch(const std::runtime_error& e) {
         throw e;
     }

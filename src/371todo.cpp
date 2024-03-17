@@ -52,39 +52,46 @@ int App::run(int argc, char *argv[]) {
   const Action a = parseActionArgument(args);
   switch (a) {
     case Action::CREATE: {
-      if (args["project"].count() && args["task"].count() && args["tag"].count()) {
+      if (args["project"].count()) {
         std::string projectIdent = args["project"].as<std::string>();
-        std::string taskIdent = args["task"].as<std::string>();
-        std::vector<std::string> tags = splitTags(args["tag"].as<std::string>());
         if (!tlObj.containsProject(projectIdent)) {
           tlObj.newProject(projectIdent);
         }
-        if (!tlObj.getProject(projectIdent).containsTask(taskIdent)){
-          tlObj.getProject(projectIdent).newTask(taskIdent);
-          for (std::string tag : tags) {
-            if (!(tlObj.getProject(projectIdent).getTask(taskIdent).containsTag(tag))) {
-              tlObj.getProject(projectIdent).getTask(taskIdent).addTag(tag);
+
+        if (args["task"].count()) {
+          std::string taskIdent = args["task"].as<std::string>();
+          if (!tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+            tlObj.getProject(projectIdent).newTask(taskIdent);
+          }
+          if (args["tag"].count()) {
+            std::vector<std::string> tags = splitTags(args["tag"].as<std::string>());
+            for (std::string tag : tags) {
+              if (!tlObj.getProject(projectIdent).getTask(taskIdent).containsTag(tag)) {
+                tlObj.getProject(projectIdent).getTask(taskIdent).addTag(tag);  
+              }
             }
           }
-        }
-          
-        tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(Date());
-        if (args["due"].count()) {
-          std::string dateAsString = args["due"].as<std::string>();
-          try {
-            tlObj.getProject(projectIdent).getTask(taskIdent).getDueDate().setDateFromString(dateAsString);
-            //date.setDateFromString(dateAsString);
-          } catch (const std::invalid_argument& e) {
-            std::cerr << "Invalid date: " << dateAsString << std::endl;
-            return 1;
+
+          if (args["due"].count()) {
+            std::string dateAsString = args["due"].as<std::string>();
+            Date date = Date();
+            tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(date);
+            try {
+              date.setDateFromString(dateAsString);
+              tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(date);
+            } catch (const std::invalid_argument& e) {
+              std::cerr << "Invalid date: " << dateAsString << std::endl;
+              return 1;
+            }
           }
-        }
-        if (args["completed"].count()) {
-          tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(true);
-        } 
-        if (args["incomplete"].count()) {
-          tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
-        }  
+
+          if (args["completed"].count()) {
+            tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(true);
+          } 
+          if (args["incomplete"].count()) {
+            tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
+          }
+        }          
       } else {
         std::cerr << "Error: missing project, task, tag, due, completed/incomplete argument(s)." << std::endl;
         return 1;
