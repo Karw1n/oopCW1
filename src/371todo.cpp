@@ -204,17 +204,14 @@ int App::run(int argc, char *argv[]) {
             tlObj.deleteProject(projectIdent);
           } else if (args.count("task")) {
             std::string taskIdent = args["task"].as<std::string>();
-            if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
-              if (!args.count("tag")) {
-                tlObj.getProject(projectIdent).deleteTask(taskIdent);
-              } else if (args.count("tag")) {
-                std::string tag = args["tag"].as<std::string>();
-                if (tlObj.getProject(projectIdent).getTask(taskIdent).containsTag(tag)) {
-                  tlObj.getProject(projectIdent).getTask(taskIdent).deleteTag(tag);
-                } else {
-                  std::cerr << "Tag " << tag << " not found in task " << taskIdent << " in project " 
-                    << projectIdent << std::endl;
-                }
+            
+            if (!args.count("tag")) {
+              tlObj.getProject(projectIdent).deleteTask(taskIdent);
+            } else if (args.count("tag")) {
+              std::string tag = args["tag"].as<std::string>();
+              if (!tlObj.getProject(projectIdent).getTask(taskIdent).deleteTag(tag)) {
+                std::cerr << "Tag " << tag << " not found in task " << taskIdent << " in project " 
+                  << projectIdent << std::endl;
               }
             } else {
               std::cerr << "Task " << taskIdent << " not found in Project " << projectIdent << std::endl;    
