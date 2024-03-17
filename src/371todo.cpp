@@ -79,13 +79,40 @@ int App::run(int argc, char *argv[]) {
         if (args["incomplete"].count()) {
           tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
         }
-        tlObj.save(db);
-        break;
       }
+      tlObj.save(db);
+      break;
     }
     case Action::JSON: {
-      std::cout << tlObj.str() << std::endl;
-      tlObj.save(db);
+      if (args["project"].count()) {
+        std::string projectIdent = args["project"].as<std::string>();
+        if (tlObj.containsProject(projectIdent)) {
+          if (args["task"].count()) {
+            std::string taskIdent = args["task"].as<std::string>();
+            if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+              if (args["tag"].count()) {
+                std::string tag = args["task"].as<std::string>();
+                if (tlObj.getProject(projectIdent).getTask(taskIdent).containsTag(tag)) {
+                  std::cout << tag << std::endl;
+                } else {
+                  std::cerr << "Error Tag  " << tag << " not found." << std::endl;
+                  return 1;
+                }
+              }
+              std::cout << tlObj.getProject(projectIdent).getTask(taskIdent).json() << std::endl;
+            } else {
+              std::cerr << "Error Task  " << taskIdent << " not found." << std::endl;
+              return 1;
+            }
+          }
+          std::cout << tlObj.getProject(projectIdent).json();
+        } else {
+          std::cerr << "Error Project " << projectIdent << " not found." << std::endl;
+          return 1;
+        }
+      } else {
+        // might have to json the todoList
+      }
       break;
     }
     case Action::UPDATE: {
@@ -179,9 +206,9 @@ int App::run(int argc, char *argv[]) {
           std::cerr << "Error: Project: " << projectIdent << " not found." << std::endl;
           return 1;
         }
-        tlObj.save(db);
-        break;
       }
+      tlObj.save(db);
+      break;
     }
   }
 
