@@ -107,8 +107,7 @@ Project& TodoList::getProject(const std::string &tIdent) {
         throw std::out_of_range("Project list is empty");
     }
 
-    for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
-        Project& project = *it;
+    for (auto& project : this->projects) {
         if (project.getIdent() == tIdent) {
             return project;
         }

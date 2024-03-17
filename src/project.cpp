@@ -146,11 +146,10 @@ Task& Project::getTask(const std::string &tIdent) {
     if (this->tasks.empty()) {
         throw std::out_of_range("Task list is empty");
     }
-
-    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {    
-        Task& task = *it;
+    
+    for (auto& task : this->tasks) {
         if (task.getIdent() == tIdent) {
-            return *it;
+            return task;
         }
     }
     throw std::out_of_range("Task not found");
