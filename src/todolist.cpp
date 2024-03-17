@@ -113,7 +113,7 @@ Project& TodoList::getProject(const std::string &tIdent) {
             return project;
         }
     }
-    throw std::out_of_range("Project not found");
+    throw std::out_of_range("Project " + tIdent + " not found");
 }
 
 

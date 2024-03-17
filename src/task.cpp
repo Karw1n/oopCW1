@@ -72,7 +72,7 @@ bool Task::addTag(std::string tag) {
 //  tObj.addTag("tag");
 //  tObj.deleteTag("tag");
 bool Task::deleteTag(std::string tag) {
-    auto it = std::find(this->tags.begin(), tags.end(), tag);
+    auto it = std::find(tags.begin(), tags.end(), tag);
     if (it != tags.end()) {
         tags.erase(it);
         return true;
