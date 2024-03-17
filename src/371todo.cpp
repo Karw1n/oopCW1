@@ -186,8 +186,8 @@ int App::run(int argc, char *argv[]) {
             tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
         }
         tlObj.save(db);
-        break;
       }
+      break;
     }
     case Action::DELETE: {
       if (args.count("project")) {

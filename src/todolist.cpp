@@ -130,7 +130,7 @@ const ProjectContainer& TodoList::getProjects() const noexcept {
 //  tObj.newProject("projectIdent");
 //  tObj.deleteProject("projectIdent");
 bool TodoList::deleteProject(const std::string &tIdent) {
-    for (auto it = this->projects.begin(); it != this->projects.end(); it++) {
+    for (auto it = this->projects.begin(); it != this->projects.end(); ++it) {
         Project& project = *it;
         if (project.getIdent() == tIdent) {
             this->projects.erase(it);

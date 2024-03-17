@@ -146,7 +146,7 @@ Task& Project::getTask(const std::string &tIdent) {
     if (this->tasks.empty()) {
         throw std::out_of_range("Task list is empty");
     }
-    
+
     for (auto& task : this->tasks) {
         if (task.getIdent() == tIdent) {
             return task;
@@ -166,7 +166,7 @@ Task& Project::getTask(const std::string &tIdent) {
 //  pObj.newTask("newTaskName");
 //  bool result = pObj.deleteTask("newTaskName");
 bool Project::deleteTask(const std::string &tIdent) {
-    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
+    for (auto it = this->tasks.begin(); it != this->tasks.end(); ++it) {
         Task task = *it;
         if (task.getIdent() == tIdent) {
             this->tasks.erase(it);
