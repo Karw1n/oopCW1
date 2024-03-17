@@ -50,6 +50,7 @@ class TodoList {
 
         friend bool operator==(const TodoList &c1, const TodoList &c2);
         std::string str() const;
+        nlohmann::json json() const;
 
 };
 

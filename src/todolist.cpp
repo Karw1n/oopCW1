@@ -219,7 +219,7 @@ void TodoList::load(const std::string& fileName) {
             throw std::runtime_error(fileName + " failed to open!");
         }
 
-        json data = json::parse(file);
+        nlohmann::json data = json::parse(file);
 
         for (auto projectIt = data.begin(); projectIt != data.end(); projectIt++) {
             std::string projectIdent = projectIt.key();
@@ -228,7 +228,7 @@ void TodoList::load(const std::string& fileName) {
                 Project newProject = Project(projectIdent);
                 for (auto taskIt = projectIt.value().begin(); taskIt != projectIt.value().end(); taskIt++) {
                     std::string taskIdent = taskIt.key();
-                    json taskMembers = taskIt.value();
+                    nlohmann::json taskMembers = taskIt.value();
                     
                     if (!newProject.containsTask(taskIdent)) {
                         Task newTask = Task(taskIdent);
@@ -258,7 +258,7 @@ void TodoList::load(const std::string& fileName) {
                 Project& existingProject = getProject(projectIdent);
                 for (auto taskIt = projectIt.value().begin(); taskIt != projectIt.value().end(); taskIt++) {
                     std::string taskIdent = taskIt.key();
-                    json taskMembers = taskIt.value();
+                    nlohmann::json taskMembers = taskIt.value();
                     Task newTask = Task(taskIdent);
                     std::string dueDate = taskMembers.value("dueDate", "0000-00-00");
                     Date date = Date();
@@ -293,9 +293,9 @@ void TodoList::save(const std::string& fileName) {
         throw std::runtime_error(fileName + " failed to open!");
     }
 
-    json projectsJson;
+    nlohmann::json projectsJson;
     for (Project& project : projects) {
-        json projectJson;  
+        nlohmann::json projectJson;  
         for (const Task& task : project.getTasks()) {
             projectJson[task.getIdent()] = task.json();
         }
@@ -364,4 +364,13 @@ std::string TodoList::str() const {
     sttr << stringProjects;
     
     return sttr.str();
+}
+
+//
+nlohmann::json TodoList::json() const {
+    nlohmann::json todoListJson;
+    for (const Project& project : projects) {
+        todoListJson[project.getIdent()] = project.json();
+    }
+    return todoListJson;
 }

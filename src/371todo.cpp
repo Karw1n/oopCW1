@@ -115,13 +115,13 @@ int App::run(int argc, char *argv[]) {
               return 1;
             }
           }
-          std::cout << tlObj.getProject(projectIdent).json();
+          std::cout << tlObj.getProject(projectIdent).json() << std::endl;
         } else {
           std::cerr << "Error Project " << projectIdent << " not found." << std::endl;
           return 1;
         }
       } else {
-        // might have to json the todoList
+        std::cout << tlObj.json() << std::endl;
       }
       break;
     }
