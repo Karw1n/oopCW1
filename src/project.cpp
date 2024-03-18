@@ -98,8 +98,6 @@ bool Project::containsTask(const std::string &tIdent) const noexcept {
         }
     }
     return false;
-    
-    return false;
 }
 
 // TODO Write a function, addTask, that takes one parameter, a Task object, and

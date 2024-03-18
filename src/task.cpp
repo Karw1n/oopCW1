@@ -105,8 +105,9 @@ unsigned int Task::numTags() const {
 //  tObj.addTag("tag");
 //  tObj.containsTag("tag");
 bool Task::containsTag(std::string tag) const {
-    for (auto& aTag : tags) {
-        if (aTag == tag) {
+    for (auto it = this->tags.begin(); it != this->tags.end(); it++) {
+        std::string aTag = *it;
+        if (tag == aTag) {
             return true;
         }
     }
