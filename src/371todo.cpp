@@ -172,26 +172,23 @@ int App::run(int argc, char *argv[]) {
         if (args.count("completed")) {
             if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
               tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(true);
+            } else {
+              std::cerr << "Error project or task not found." << std::endl;
+              return 1;
             }
-            // } else {
-            //   std::cerr << "Error project or task not found." << std::endl;
-            //   return 1;
-            // }
         }
 
         if (args.count("incomplete")) {
             if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
               tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
+            } else {
+              std::cerr << "Error project or task not found." << std::endl;
+              return 1;
             }
-            // } else {
-            //   std::cerr << "Error project or task not found." << std::endl;
-            //   return 1;
-            // }
         }
-
         if (args.count("due")) {
             std::string dueDateStr = args["due"].as<std::string>();
-            Date dueDate = Date();
+            Date dueDate;
             try {
               dueDate.setDateFromString(dueDateStr);
             } catch (std::invalid_argument& e) {
