@@ -103,28 +103,32 @@ int App::run(int argc, char *argv[]) {
     case Action::JSON: {
       if (args["project"].count()) {
         std::string projectIdent = args["project"].as<std::string>();
+
         if (tlObj.containsProject(projectIdent)) {
+        
           if (args["task"].count()) {
             std::string taskIdent = args["task"].as<std::string>();
+        
             if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
               if (args["tag"].count()) {
                 std::string tag = args["task"].as<std::string>();
                 if (tlObj.getProject(projectIdent).getTask(taskIdent).containsTag(tag)) {
                   std::cout << tag << std::endl;
                 } else {
-                  std::cerr << "Error Tag  " << tag << " not found." << std::endl;
+                  std::cerr << "Error: invalid task arguments(s)" << std::endl;
                   return 1;
                 }
               }
-              std::cout << tlObj.getProject(projectIdent).getTask(taskIdent).json() << std::endl;
+              
             } else {
-              std::cerr << "Error Task  " << taskIdent << " not found." << std::endl;
+              std::cerr << "Error: invalid task argument(s)" << std::endl;
               return 1;
             }
+            std::cout << tlObj.getProject(projectIdent).getTask(taskIdent).json() << std::endl;
           }
           std::cout << tlObj.getProject(projectIdent).json() << std::endl;
         } else {
-          std::cerr << "Error Project " << projectIdent << " not found." << std::endl;
+          std::cerr << "Error: invalid task argument(s)" << std::endl;
           return 1;
         }
       } else if (args.count("task") || args.count("tag")) {
