@@ -79,7 +79,7 @@ int App::run(int argc, char *argv[]) {
             try {
               date.setDateFromString(dateAsString);
             } catch (const std::invalid_argument& e) {
-              std::cerr << "Invalid date: " << dateAsString << e.what() << std::endl;
+              std::cerr << "Invalid date: " << dateAsString << std::endl;
               return 1;
             }
             
@@ -134,7 +134,7 @@ int App::run(int argc, char *argv[]) {
           std::cerr << "Error: invalid project argument(s)." << std::endl;
           return 1;
         }
-      } else if (args.count("task") || args.count("tag") && !args.count("project")) {
+      } else if ((args.count("task") || args.count("tag")) && !args.count("project")) {
         std::cerr << "Error: missing project argument(s)." << std::endl;
         return 1;
       } else {
@@ -196,7 +196,7 @@ int App::run(int argc, char *argv[]) {
           try {
             dueDate.setDateFromString(dueDateStr);
           } catch (std::invalid_argument& e) {
-            std::cerr << "Incorrect date entered." << e.what() << std::endl;
+            std::cerr << "Incorrect date entered." << std::endl;
             return 1;
           }
           tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
@@ -214,13 +214,16 @@ int App::run(int argc, char *argv[]) {
           } else if (args.count("task")) {
             std::string taskIdent = args["task"].as<std::string>();
             
-            if (!args.count("tag")) {
-              tlObj.getProject(projectIdent).deleteTask(taskIdent);
-            } else if (args.count("tag")) {
-              std::string tag = args["tag"].as<std::string>();
-              if (!tlObj.getProject(projectIdent).getTask(taskIdent).deleteTag(tag)) {
-                std::cerr << "Tag " << tag << " not found in task " << taskIdent << " in project " 
-                  << projectIdent << std::endl;
+            if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+              if (args.count("tag")) {
+                std::string tag = args["tag"].as<std::string>();
+                if (!tlObj.getProject(projectIdent).getTask(taskIdent).deleteTag(tag)) {
+                  std::cerr << "Tag " << tag << " not found in task " << taskIdent << " in project " 
+                    << projectIdent << std::endl;
+                  return 1;
+                }
+              } else if (args.count("due")) {
+                tlObj.getProject(projectIdent).getTask(taskIdent).getDueDate().setDateFromString("");
               }
             } else {
               std::cerr << "Task " << taskIdent << " not found in Project " << projectIdent << std::endl;    
