@@ -119,15 +119,16 @@ int App::run(int argc, char *argv[]) {
                   std::cerr << "Error: invalid tag arguments(s)." << std::endl;
                   return 1;
                 }
+              } else {
+                std::cout << task.json() << std::endl;
               }
-              
-              std::cout << task.json() << std::endl;
             } else {
               std::cerr << "Error: invalid task argument(s)." << std::endl;
               return 1;
             }
+          } else {
+            std::cout << project.json() << std::endl;
           }
-          std::cout << project.json() << std::endl;
         } else {
           std::cerr << "Error: invalid project argument(s)." << std::endl;
           return 1;
