@@ -209,9 +209,7 @@ int App::run(int argc, char *argv[]) {
       if (args.count("project")) {
         std::string projectIdent = args["project"].as<std::string>();
         if (tlObj.containsProject(projectIdent)) {
-          if (!args.count("task") && !args.count("tag")) {
-            tlObj.deleteProject(projectIdent);
-          } else if (args.count("task")) {
+          if (args.count("task")) {
             std::string taskIdent = args["task"].as<std::string>();
             
             if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
@@ -224,12 +222,16 @@ int App::run(int argc, char *argv[]) {
                 }
               } else if (args.count("due")) {
                 tlObj.getProject(projectIdent).getTask(taskIdent).getDueDate().setDateFromString("");
+              } else {
+                tlObj.getProject(projectIdent).deleteTask(taskIdent);
               }
             } else {
               std::cerr << "Task " << taskIdent << " not found in Project " << projectIdent << std::endl;    
               return 1;
             }
-          } 
+          } else {
+            tlObj.deleteProject(projectIdent);
+          }
         } else {
           std::cerr << "Project " << projectIdent << "not found." << std::endl;
           return 1;
