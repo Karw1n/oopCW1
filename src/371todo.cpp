@@ -188,10 +188,10 @@ int App::run(int argc, char *argv[]) {
             //   return 1;
             // }
         }
-        
+
         if (args.count("due")) {
             std::string dueDateStr = args["due"].as<std::string>();
-            Date dueDate;
+            Date dueDate = Date();
             try {
               dueDate.setDateFromString(dueDateStr);
             } catch (std::invalid_argument& e) {
