@@ -108,28 +108,28 @@ int App::run(int argc, char *argv[]) {
         
           if (args["task"].count()) {
             std::string taskIdent = args["task"].as<std::string>();
-        
+            
             if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+              auto& task = tlObj.getProject(projectIdent).getTask(taskIdent);
               if (args["tag"].count()) {
                 std::string tag = args["task"].as<std::string>();
-                auto& project = tlObj.getProject(projectIdent).getTask(taskIdent); 
-                if (project.containsTag(tag)) {
+                if (task.containsTag(tag)) {
                   std::cout << tag << std::endl;
                 } else {
-                  std::cerr << "Error: invalid task arguments(s)." << std::endl;
+                  std::cerr << "Error: invalid tag arguments(s)." << std::endl;
                   return 1;
                 }
               }
               
+              std::cout << task.json() << std::endl;
             } else {
               std::cerr << "Error: invalid task argument(s)." << std::endl;
               return 1;
             }
-            std::cout << tlObj.getProject(projectIdent).getTask(taskIdent).json() << std::endl;
           }
           std::cout << tlObj.getProject(projectIdent).json() << std::endl;
         } else {
-          std::cerr << "Error: invalid task argument(s)." << std::endl;
+          std::cerr << "Error: invalid project argument(s)." << std::endl;
           return 1;
         }
       } else if (args.count("task") || args.count("tag") && !args.count("project")) {
@@ -172,19 +172,21 @@ int App::run(int argc, char *argv[]) {
         if (args.count("completed")) {
             if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
               tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(true);
-            } else {
-              std::cerr << "Error project or task not found." << std::endl;
-              return 1;
             }
+            // } else {
+            //   std::cerr << "Error project or task not found." << std::endl;
+            //   return 1;
+            // }
         }
 
         if (args.count("incomplete")) {
             if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
               tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
-            } else {
-              std::cerr << "Error project or task not found." << std::endl;
-              return 1;
             }
+            // } else {
+            //   std::cerr << "Error project or task not found." << std::endl;
+            //   return 1;
+            // }
         }
         if (args.count("due")) {
             std::string dueDateStr = args["due"].as<std::string>();
