@@ -105,11 +105,11 @@ int App::run(int argc, char *argv[]) {
         std::string projectIdent = args["project"].as<std::string>();
 
         if (tlObj.containsProject(projectIdent)) {
-        
+        auto& project = tlObj.getProject(projectIdent);
           if (args["task"].count()) {
             std::string taskIdent = args["task"].as<std::string>();
             
-            if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+            if (project.containsTask(taskIdent)) {
               auto& task = tlObj.getProject(projectIdent).getTask(taskIdent);
               if (args["tag"].count()) {
                 std::string tag = args["task"].as<std::string>();
@@ -127,7 +127,7 @@ int App::run(int argc, char *argv[]) {
               return 1;
             }
           }
-          std::cout << tlObj.getProject(projectIdent).json() << std::endl;
+          std::cout << project.json() << std::endl;
         } else {
           std::cerr << "Error: invalid project argument(s)." << std::endl;
           return 1;
@@ -188,6 +188,7 @@ int App::run(int argc, char *argv[]) {
             //   return 1;
             // }
         }
+        
         if (args.count("due")) {
             std::string dueDateStr = args["due"].as<std::string>();
             Date dueDate;
