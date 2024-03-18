@@ -105,7 +105,7 @@ int App::run(int argc, char *argv[]) {
         std::string projectIdent = args["project"].as<std::string>();
 
         if (tlObj.containsProject(projectIdent)) {
-        auto& project = tlObj.getProject(projectIdent);
+          auto& project = tlObj.getProject(projectIdent);
           if (args["task"].count()) {
             std::string taskIdent = args["task"].as<std::string>();
             

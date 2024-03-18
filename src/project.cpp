@@ -91,7 +91,7 @@ TaskContainer::iterator Project::findTask(const std::string &tIdent) {
 }
 
 bool Project::containsTask(const std::string &tIdent) const noexcept {
-    for (auto it = this->tasks.begin(); it != this->tasks.begin(); it++) {
+    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
         Task task = *it;
         if (task.getIdent() == tIdent) {
             return true;
