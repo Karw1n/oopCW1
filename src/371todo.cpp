@@ -78,11 +78,12 @@ int App::run(int argc, char *argv[]) {
             tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(date);
             try {
               date.setDateFromString(dateAsString);
-              tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(date);
             } catch (const std::invalid_argument& e) {
-              std::cerr << "Invalid date: " << dateAsString << std::endl;
+              std::cerr << "Invalid date: " << dateAsString << e.what() << std::endl;
               return 1;
             }
+            
+            tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(date);
           }
 
           if (args["completed"].count()) {
@@ -112,7 +113,7 @@ int App::run(int argc, char *argv[]) {
             if (project.containsTask(taskIdent)) {
               auto& task = tlObj.getProject(projectIdent).getTask(taskIdent);
               if (args["tag"].count()) {
-                std::string tag = args["task"].as<std::string>();
+                std::string tag = args["tag"].as<std::string>();
                 if (task.containsTag(tag)) {
                   std::cout << tag << std::endl;
                 } else {
@@ -195,7 +196,7 @@ int App::run(int argc, char *argv[]) {
           try {
             dueDate.setDateFromString(dueDateStr);
           } catch (std::invalid_argument& e) {
-            std::cerr << "Incorrect date entered." << std::endl;
+            std::cerr << "Incorrect date entered." << e.what() << std::endl;
             return 1;
           }
           tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
