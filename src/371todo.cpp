@@ -112,26 +112,27 @@ int App::run(int argc, char *argv[]) {
             if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
               if (args["tag"].count()) {
                 std::string tag = args["task"].as<std::string>();
-                if (tlObj.getProject(projectIdent).getTask(taskIdent).containsTag(tag)) {
+                auto& project = tlObj.getProject(projectIdent).getTask(taskIdent); 
+                if (project.containsTag(tag)) {
                   std::cout << tag << std::endl;
                 } else {
-                  std::cerr << "Error: invalid task arguments(s)" << std::endl;
+                  std::cerr << "Error: invalid task arguments(s)." << std::endl;
                   return 1;
                 }
               }
               
             } else {
-              std::cerr << "Error: invalid task argument(s)" << std::endl;
+              std::cerr << "Error: invalid task argument(s)." << std::endl;
               return 1;
             }
             std::cout << tlObj.getProject(projectIdent).getTask(taskIdent).json() << std::endl;
           }
           std::cout << tlObj.getProject(projectIdent).json() << std::endl;
         } else {
-          std::cerr << "Error: invalid task argument(s)" << std::endl;
+          std::cerr << "Error: invalid task argument(s)." << std::endl;
           return 1;
         }
-      } else if (args.count("task") || args.count("tag")) {
+      } else if (args.count("task") || args.count("tag") && !args.count("project")) {
         std::cerr << "Error: missing project argument(s)." << std::endl;
         return 1;
       } else {
