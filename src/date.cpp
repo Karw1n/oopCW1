@@ -26,13 +26,24 @@ void Date::setDateFromString(const std::string& date) {
     if (date.empty()) {
         this->initialized = false;
     } else {
-        if (date.size() != 10 || date[4] != '-' || date[7] != '-') {
+        if ((date.size() != 10 && date.size() != 9) || date[4] != '-' || (date[7] != '-' && date[6] != '-')) {
             throw std::invalid_argument("Incorrect date string formated entered. Correct format: YYYY-MM-DD. Date was: " + date);
         }
 
         unsigned int theYear = std::stoi(date.substr(0, 4));
-        unsigned int theMonth = std::stoi(date.substr(5, 2));
-        unsigned int theDay = std::stoi(date.substr(8, 2));
+        unsigned int theMonth;
+        if (date[7] == '-') {
+            theMonth = std::stoi(date.substr(5, 2));
+        } else {
+            theMonth = std::stoi(date.substr(5, 1));
+        }
+        unsigned int theDay;
+        
+        if (date.size() == 10) {
+            theDay = std::stoi(date.substr(8, 2));
+        } else {
+            theDay = std::stoi(date.substr(8, 1));
+        }
         
         if (theMonth > 12 || theDay > 31 || theMonth < 1 || theDay < 1) {   
             this->initialized = false;
