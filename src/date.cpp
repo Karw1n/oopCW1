@@ -27,7 +27,7 @@ void Date::setDateFromString(const std::string& date) {
         this->initialized = false;
     } else {
         if (date.size() != 10 || date[4] != '-' || date[7] != '-') {
-            throw std::invalid_argument("Incorrect date string formated entered. Correct format: YYYY-MM-DD.");
+            throw std::invalid_argument("Incorrect date string formated entered. Correct format: YYYY-MM-DD. Date was: " + date);
         }
 
         unsigned int theYear = std::stoi(date.substr(0, 4));
