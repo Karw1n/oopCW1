@@ -220,6 +220,12 @@ int App::run(int argc, char *argv[]) {
                 }
               } else if (args.count("due")) {
                 Date dueDate = Date();
+                try {
+                  dueDate.setDateFromString("");
+                } catch (const std::invalid_argument& e) {
+                  std::cerr << "Error resseting data." << std::endl;
+                  return 1;
+                }
                 tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
               } else {
                 tlObj.getProject(projectIdent).deleteTask(taskIdent);

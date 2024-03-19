@@ -232,12 +232,10 @@ void TodoList::load(const std::string& fileName) {
                     if (!newProject.containsTask(taskIdent)) {
                         Task newTask = Task(taskIdent);
                         newTask.setComplete(taskMembers["completed"]);
-                        std::string dueDate = taskMembers.value("dueDate", "null");
+                        std::string dueDate = taskMembers.value("dueDate", "");
                         Date date = Date();
-                        if (!(dueDate == "null")) {
-                            date.setDateFromString(dueDate);
-                            newTask.setDueDate(date);
-                        }
+                        date.setDateFromString(dueDate);
+                        newTask.setDueDate(date);
                         
                         for (const auto& tag : taskMembers["tags"]) {
                             newTask.addTag(tag);
@@ -259,11 +257,9 @@ void TodoList::load(const std::string& fileName) {
                     std::string taskIdent = taskIt.key();
                     nlohmann::json taskMembers = taskIt.value();
                     Task newTask = Task(taskIdent);
-                    std::string dueDate = taskMembers.value("dueDate", "null");
+                    std::string dueDate = taskMembers.value("dueDate", "");
                     Date date = Date();
-                        if (!(dueDate == "null")) {
-                            date.setDateFromString(dueDate);
-                        }
+                    date.setDateFromString(dueDate);
                     newTask.setDueDate(date);
                     for (const auto& tag : taskMembers["tags"]) {
                         newTask.addTag(tag);
