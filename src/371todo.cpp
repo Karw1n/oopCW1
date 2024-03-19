@@ -191,12 +191,7 @@ int App::run(int argc, char *argv[]) {
         if (args.count("due")) {
           std::string dueDateStr = args["due"].as<std::string>();
           Date dueDate = Date();
-          try {
-            dueDate.setDateFromString(dueDateStr);
-          } catch (std::invalid_argument& e) {
-            std::cerr << "Incorrect date entered." << std::endl;
-            return 1;
-          }
+          dueDate.setDateFromString(dueDateStr);
           tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
         }
         tlObj.save(db);
@@ -218,12 +213,11 @@ int App::run(int argc, char *argv[]) {
                     << projectIdent << std::endl;
                   return 1;
                 }
-              } 
-              if (args.count("due")) {
-                tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(Date());
-              } 
-              
-              if (!args.count("tag") || (!args.count("due"))) {
+              } else if (args.count("due")) {
+                Date dueDate = Date();
+                dueDate.setDateFromString("");
+                tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
+              } else {
                 tlObj.getProject(projectIdent).deleteTask(taskIdent);
               }
             } else {
