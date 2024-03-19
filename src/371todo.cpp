@@ -74,16 +74,14 @@ int App::run(int argc, char *argv[]) {
 
           if (args["due"].count()) {
             std::string dateAsString = args["due"].as<std::string>();
-            Date date = Date();
-            tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(date);
+            Date dueDate = Date();
             try {
-              date.setDateFromString(dateAsString);
+              dueDate.setDateFromString(dateAsString);
             } catch (const std::invalid_argument& e) {
               std::cerr << "Invalid date: " << dateAsString << std::endl;
               return 1;
             }
-            
-            tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(date);
+            tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
           }
 
           if (args["completed"].count()) {
@@ -92,13 +90,13 @@ int App::run(int argc, char *argv[]) {
           if (args["incomplete"].count()) {
             tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
           }
-        }          
+        }    
+        tlObj.save(db);      
       } else {
         std::cerr << "Error: missing project, task, tag, due, completed/incomplete argument(s)." << std::endl;
         return 1;
       }
       
-      tlObj.save(db);
       break;
     }
     case Action::JSON: {
@@ -221,12 +219,8 @@ int App::run(int argc, char *argv[]) {
                   return 1;
                 }
               } else if (args.count("due")) {
-                try {
-                  tlObj.getProject(projectIdent).getTask(taskIdent).getDueDate().setDateFromString("");
-                } catch (const std::invalid_argument& e) {
-                  std::cerr << "Nothing was not actually entered" << std::endl;
-                  return 1;
-                }
+                Date dueDate = Date();
+                tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
               } else {
                 tlObj.getProject(projectIdent).deleteTask(taskIdent);
               }
