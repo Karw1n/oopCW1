@@ -221,7 +221,12 @@ int App::run(int argc, char *argv[]) {
                   return 1;
                 }
               } else if (args.count("due")) {
-                tlObj.getProject(projectIdent).getTask(taskIdent).getDueDate().setDateFromString("");
+                try {
+                  tlObj.getProject(projectIdent).getTask(taskIdent).getDueDate().setDateFromString("");
+                } catch (const std::invalid_argument& e) {
+                  std::cerr << "Nothing was not actually entered" << std::endl;
+                  return 1;
+                }
               } else {
                 tlObj.getProject(projectIdent).deleteTask(taskIdent);
               }
