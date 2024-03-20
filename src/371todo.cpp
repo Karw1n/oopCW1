@@ -195,8 +195,6 @@ int App::run(int argc, char *argv[]) {
             tlObj.getProject(projectIdent).getTask(taskIdent).getDueDate().setDateFromString(dueDateStr);
           }
         }
-
-        
         tlObj.save(db);
       }
       break;
@@ -207,7 +205,6 @@ int App::run(int argc, char *argv[]) {
         if (tlObj.containsProject(projectIdent)) {
           if (args.count("task")) {
             std::string taskIdent = args["task"].as<std::string>();
-            
             if (tlObj.getProject(projectIdent).containsTask(taskIdent)) {
               if (args.count("tag")) {
                 std::string tag = args["tag"].as<std::string>();
@@ -232,8 +229,9 @@ int App::run(int argc, char *argv[]) {
           std::cerr << "Project " << projectIdent << "not found." << std::endl;
           return 1;
         }
+        tlObj.save(db);
       }
-      tlObj.save(db);
+      
       break;
     }
   }
