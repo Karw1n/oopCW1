@@ -45,7 +45,7 @@ void Date::setDateFromString(const std::string& date) {
             theDay = std::stoi(date.substr(8, 1));
         }
         
-        if (theMonth > 12 || theDay > 31 || theMonth < 1 || theDay < 1) {   
+        if (!isValidDate(theYear, theMonth, theDay)) {   
             this->initialized = false;
             throw std::invalid_argument("Incorrect date entered.");
         } else {
@@ -64,7 +64,7 @@ void Date::setDateFromString(const std::string& date) {
 //  if(d.isInitialised()) {
 //    ...
 //  }
-bool Date::isInitialised() const { 
+const bool Date::isInitialised() const noexcept { 
     return this->initialized;
 }
 
@@ -91,8 +91,7 @@ std::string Date::str() const {
 // Example:
 //  Date d = Date();
 //  d.setDate(2024, 1, 1);
-void Date::setDate(unsigned int year, unsigned int month, unsigned int day) {
-    // TODO Add cheks to see if dates and months are valid
+void Date::setDate(unsigned int year, unsigned int month, unsigned int day) noexcept {
     this->year = year;
     this->month = month;
     this->day = day;
@@ -103,24 +102,24 @@ void Date::setDate(unsigned int year, unsigned int month, unsigned int day) {
 // member variable
 //  Date d = Date();
 //  auto year = d.getYear();
-unsigned int Date::getYear() const {
-    return this->year;
+const unsigned int Date::getYear() const noexcept {
+    return year;
 }
 
 // TODO Write a function, getMonth, that takes no parameters and returns month
 // member variable
 //  Date d = Date();
 //  auto month = d.getMonth();
-unsigned int Date::getMonth() const {
-    return this->month;
+const unsigned int Date::getMonth() const noexcept {
+    return month;
 }
 
 // TODO Write a function, getDay, that takes no parameters and returns day
 // member variable
 //  Date d = Date();
 //  auto day = d.getDay();
-unsigned int Date::getDay() const {
-    return this->day;
+const unsigned int Date::getDay() const noexcept {
+    return day;
 }
 
 // TODO Write an == operator overload for the Date class, such that two
@@ -133,8 +132,10 @@ unsigned int Date::getDay() const {
 //   if (d1 == d2) {
 //     ...
 //   }
-bool Date::operator==(const Date &otherDate) const {
-    return (this->day == otherDate.getDay() && this->month == otherDate.getMonth() && this->year == otherDate.getYear());
+bool operator==(const Date &date1, const Date &date2) {
+    return (date1.getDay() == date2.getDay() 
+        && date1.getMonth() == date2.getMonth() 
+        && date1.getYear() == date2.getYear());
 }
 
 
@@ -150,9 +151,35 @@ bool Date::operator==(const Date &otherDate) const {
 //   if (d1 < d2) {
 //     ...
 //   }
-bool Date::operator<(const Date &otherDate) const {
-    return ((this->year < otherDate.getYear()) 
-        || (this->month < otherDate.getMonth() && this->year <= otherDate.getYear()) 
-        || (this->day < otherDate.getDay() && this->month == otherDate.getMonth() && this->year <= otherDate.getYear()));
+bool operator<(const Date &date1, const Date &date2) {
+    return ((date1.getYear() < date2.getYear()) 
+        || (date1.getMonth() < date2.getMonth() && date1.getYear() <= date2.getYear()) 
+        || (date1.getDay() < date2.getDay() && date1.getMonth() == date2.getMonth() 
+        && date1.getYear() <= date2.getYear()));
 }
 
+// Helper function to determine whether a given date (year, month, day) is a valid date
+const bool Date::isValidDate(unsigned int year, unsigned int month, unsigned int day) {
+    if (year < 1 || month < 1 || month > 12 || day < 1) {
+        return false;
+    }   
+
+    if (month == 2) {
+        if (isLeapYear(year)) {
+            return day <= 29;
+        } else {
+            return day <= 28;
+        }
+    }
+
+    if (month == 4 || month == 6 || month == 9 || month == 11) {
+        return day <= 30;
+    }
+
+    return day <= 31;
+}
+
+// Helper function to determine whether a given year is a leap year
+const bool Date::isLeapYear(unsigned int year) {
+    return ((year % 4 == 0 && 100 != 0) || (year % 400 == 0));
+}

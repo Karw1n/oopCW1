@@ -27,16 +27,23 @@ private:
   bool initialized;
 
 public:
-  Date();
+  explicit Date();
+  ~Date() = default;
+
   void setDateFromString(const std::string& string);
-  bool isInitialised() const;
+  const bool isInitialised() const noexcept;
   std::string str() const;
-  void setDate(unsigned int year, unsigned int month, unsigned int day);
-  unsigned int getYear() const;
-  unsigned int getMonth() const;
-  unsigned int getDay() const;
-  bool operator==(const Date &otherDate) const;
-  bool operator<(const Date &otherDate) const;
+
+  void setDate(unsigned int year, unsigned int month, unsigned int day) noexcept;
+
+  const unsigned int getYear() const noexcept;
+  const unsigned int getMonth() const noexcept;
+  const unsigned int getDay() const noexcept;
+  friend bool operator==(const Date &date1, const Date &date2);
+  friend bool operator<(const Date &date1, const Date &date2);
+
+  const bool isValidDate(unsigned int year, unsigned int month, unsigned int day);
+  const bool isLeapYear(unsigned int year); 
 };
 
 #endif // DATE_H

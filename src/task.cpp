@@ -27,12 +27,13 @@ Task::Task(const std::string& ident) : ident(ident) {
 // Example:
 //  Task tObj{"Task Name"};
 //  auto ident = tObj.getIdent();
-std::string Task::getIdent() const {
+const std::string Task::getIdent() const noexcept {
     return ident;
 }
 
+// Function that returns the container object
 const TagContainer &Task::getTags() const noexcept {
-    return this->tags;
+    return tags;
 }
 
 // TODO Write a function, setIdent, that takes one parameter, a string for a new
@@ -53,12 +54,12 @@ void Task::setIndent(std::string& ident) {
 //  Task tObj{"Task Name"};
 //  tObj.addTag("tag");
 bool Task::addTag(std::string tag) {
-    for (auto it = this->tags.begin(); it != this->tags.end(); it++) {
+    for (auto it = tags.begin(); it != tags.end(); it++) {
         if (*it == tag) {
             return false;
         }
     }
-    this->tags.push_back(tag); 
+    tags.push_back(tag); 
     return true;
 }
 
@@ -88,7 +89,7 @@ bool Task::deleteTag(std::string tag) {
 // Example:
 //  Task tObj{"Task Name"};
 //  tObj.numTags();
-unsigned int Task::numTags() const {
+const unsigned int Task::numTags() const noexcept {
     unsigned int count = 0;
     for (auto it = this->tags.begin(); it != this->tags.end(); it++) {
         count++;
@@ -119,7 +120,7 @@ bool Task::containsTag(std::string tag) const {
 // Example:
 //  Task tObj{"Task Name"};
 //  tObj.getDueDate();
-Date Task::getDueDate() const {
+Date Task::getDueDate() const noexcept {
     return this->dueDate;
 }
 
@@ -131,7 +132,7 @@ Date Task::getDueDate() const {
 //  Date d = Date();
 //  tObj.setDueDate(d);
 void Task::setDueDate(Date date) {
-    this->dueDate = date;
+    dueDate = date;
 }
 
 // TODO Write a function, setComplete, that takes one parameter, a bool for
@@ -141,7 +142,7 @@ void Task::setDueDate(Date date) {
 //  Task tObj{"Task Name"};
 //  tObj.setComplete(true);
 void Task::setComplete(bool aBool) {
-    this->complete = aBool;
+    complete = aBool;
 }
 
 
@@ -153,8 +154,8 @@ void Task::setComplete(bool aBool) {
 //  if(tObj.isComplete()) {
 //   ...
 //  }
-bool Task::isComplete() const {
-    return this->complete;
+const bool Task::isComplete() const noexcept {
+    return complete;
 }
 
 // TODO Write an == operator overload for the Task class, such that two
@@ -167,13 +168,13 @@ bool Task::isComplete() const {
 //  if(tObj1 == tObj2) {
 //   ...
 //  }
-bool Task::operator==(const Task& task) const {
-    if (this->ident == task.getIdent() 
-        && this->dueDate == task.getDueDate() 
-        && this->complete == task.isComplete()) {
+bool operator==(const Task &task1, const Task &task2) {
+    if (task1.getIdent() == task2.getIdent() 
+        && task1.getDueDate() == task2.getDueDate() 
+        && task1.isComplete() == task2.isComplete()) {
         
-        for(auto it = this->tags.begin(); it != this->tags.end(); it++) {
-            if (!task.containsTag(*it)) {
+        for(auto it = task1.getTags().begin(); it != task1.getTags().end(); it++) {
+            if (!task2.containsTag(*it)) {
                 return false;
             }
         }
@@ -224,3 +225,5 @@ nlohmann::json Task::json() const {
         {"tags", tags}
     };
 }
+
+

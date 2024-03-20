@@ -2,7 +2,7 @@
 // CSC371 Advanced Object Oriented Programming (2023/24)
 // Department of Computer Science, Swansea University
 //
-// Author: <STUDENT NUMBER>
+// Author: <2142479>
 //
 // Canvas: https://canvas.swansea.ac.uk/courses/44636
 // -----------------------------------------------------
@@ -23,7 +23,7 @@ Project::Project(std::string ident) : ident(ident) {}
 //  Project p{"projectIdent"};
 //  auto size = p.size();
 unsigned int Project::size() const noexcept{
-    return this->tasks.size();
+    return tasks.size();
 }
 
 
@@ -33,7 +33,7 @@ unsigned int Project::size() const noexcept{
 //  Project pObj{"projectIdent"};
 //  auto ident = pObj.getIdent();
 const std::string& Project::getIdent() const noexcept {
-    return this->ident;
+    return ident;
 }
 
 // TODO Write a function, setIdent, that takes one parameter, a string for a new
@@ -43,7 +43,7 @@ const std::string& Project::getIdent() const noexcept {
 //  Project pObj{"projectIdent"};
 //  pObj.setIdent("projectIdent2");
 void Project::setIdent(std::string pIdent) noexcept {
-    this->ident = pIdent;
+    ident = pIdent;
 }
 
 // A function that returns the TaskContainer
@@ -61,7 +61,7 @@ const TaskContainer& Project::getTasks() const noexcept {
 //  Project pObj{"projectIdent"};
 //  pObj.newTask("newTaskName");
 Task &Project::newTask(const std::string &tIdent) {
-    for (auto& task : this->tasks) {
+    for (auto& task : tasks) {
         if (task.getIdent() == tIdent) {
             return task;
         }
@@ -79,7 +79,7 @@ Task &Project::newTask(const std::string &tIdent) {
 }
 
 TaskContainer::iterator Project::findTask(const std::string &tIdent) {
-    for (auto it = this->tasks.begin(); it != this->tasks.begin(); it++) {
+    for (auto it = tasks.begin(); it != tasks.begin(); it++) {
         Task task = *it;
         if (task.getIdent() == tIdent) {
             return it;
@@ -91,7 +91,7 @@ TaskContainer::iterator Project::findTask(const std::string &tIdent) {
 }
 
 bool Project::containsTask(const std::string &tIdent) const noexcept {
-    for (auto it = this->tasks.begin(); it != this->tasks.end(); it++) {
+    for (auto it = tasks.begin(); it != tasks.end(); it++) {
         Task task = *it;
         if (task.getIdent() == tIdent) {
             return true;
@@ -113,7 +113,7 @@ bool Project::containsTask(const std::string &tIdent) const noexcept {
 //  Task tObj{"taskIdent"};
 //  pObj.addItem(tObj);
 bool Project::addTask(Task task) {
-    for (Task& aTask : this->tasks) {
+    for (Task& aTask : tasks) {
         if (aTask.getIdent() == task.getIdent()) {
             for (const auto& tag : task.getTags()) {
                 if (!aTask.containsTag(tag)) {
@@ -125,7 +125,7 @@ bool Project::addTask(Task task) {
             return false;
         }
     }   
-    this->tasks.push_back(task);
+    tasks.push_back(task);
     return true;
 }
 
@@ -141,11 +141,11 @@ bool Project::addTask(Task task) {
 //  pObj.newTask("newTaskName");
 //  auto tObj = pObj.getTask("newTaskName");
 Task& Project::getTask(const std::string &tIdent) {
-    if (this->tasks.empty()) {
+    if (tasks.empty()) {
         throw std::out_of_range("Task list is empty");
     }
 
-    for (auto& task : this->tasks) {
+    for (auto& task : tasks) {
         if (task.getIdent() == tIdent) {
             return task;
         }
@@ -164,10 +164,10 @@ Task& Project::getTask(const std::string &tIdent) {
 //  pObj.newTask("newTaskName");
 //  bool result = pObj.deleteTask("newTaskName");
 bool Project::deleteTask(const std::string &tIdent) {
-    for (auto it = this->tasks.begin(); it != this->tasks.end(); ++it) {
+    for (auto it = tasks.begin(); it != tasks.end(); ++it) {
         Task task = *it;
         if (task.getIdent() == tIdent) {
-            this->tasks.erase(it);
+            tasks.erase(it);
             return true;
         }
     }
@@ -232,6 +232,7 @@ std::string Project::str() const {
     return sttr.str();
 }
 
+// Function that returns the json format of project object.
 nlohmann::json Project::json() const {
     nlohmann::json projectJson;
     for (const Task& task : tasks) {

@@ -2,7 +2,7 @@
 // CSC371 Advanced Object Oriented Programming (2023/24)
 // Department of Computer Science, Swansea University
 //
-// Author: <STUDENT NUMBER>
+// Author: <2142479>
 //
 // Canvas: https://canvas.swansea.ac.uk/courses/44636
 // -----------------------------------------------------
@@ -27,20 +27,21 @@ class Task {
         bool complete;
 
     public:
-        Task(const std::string& identifier);
-        std::string getIdent() const;
+        explicit Task(const std::string& identifier);
+        ~Task() = default;
+        
+        const std::string getIdent() const noexcept;
         const TagContainer &getTags() const noexcept;
-        // TODO might need to make other functions const
         void setIndent(std::string& identifier);
         bool addTag(std::string tag);
         bool deleteTag(std::string tag);
-        unsigned int numTags() const;
+        const unsigned int numTags() const noexcept;
         bool containsTag(std::string tag) const;
-        Date getDueDate() const;
+        Date getDueDate() const noexcept;
         void setDueDate(Date date);
         void setComplete(bool aBool);
-        bool isComplete() const;
-        bool operator==(const Task& task) const;
+        const bool isComplete() const noexcept;
+        friend bool operator==(const Task& task1, const Task& task2);
         std::string str() const;
         nlohmann::json json() const;
 

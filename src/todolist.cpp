@@ -2,7 +2,7 @@
 // CSC371 Advanced Object Oriented Programming (2023/24)
 // Department of Computer Science, Swansea University
 //
-// Author: <STUDENT NUMBER>
+// Author: <2142479>
 //
 // Canvas: https://canvas.swansea.ac.uk/courses/44636
 // -----------------------------------------------------
@@ -103,11 +103,11 @@ bool TodoList::containsProject(const std::string &tIdent) const noexcept {
 //  tObj.newProject("projectIdent");
 //  auto cObj = tObj.getProject("projectIdent");
 Project& TodoList::getProject(const std::string &tIdent) {
-    if (this->projects.empty()) {
+    if (projects.empty()) {
         throw std::out_of_range("Project list is empty");
     }
 
-    for (auto& project : this->projects) {
+    for (auto& project : projects) {
         if (project.getIdent() == tIdent) {
             return project;
         }
@@ -130,10 +130,10 @@ const ProjectContainer& TodoList::getProjects() const noexcept {
 //  tObj.newProject("projectIdent");
 //  tObj.deleteProject("projectIdent");
 bool TodoList::deleteProject(const std::string &tIdent) {
-    for (auto it = this->projects.begin(); it != this->projects.end(); ++it) {
+    for (auto it = projects.begin(); it != projects.end(); ++it) {
         Project& project = *it;
         if (project.getIdent() == tIdent) {
-            this->projects.erase(it);
+            projects.erase(it);
             return true;
         }
     }
@@ -328,8 +328,6 @@ bool operator==(const TodoList &c1, const TodoList &c2) {
             return false;
         }
     }
-
-
     return true;
 } 
 
@@ -361,7 +359,7 @@ std::string TodoList::str() const {
     return sttr.str();
 }
 
-//
+// Returns the projects in the todolist in json format.
 nlohmann::json TodoList::json() const {
     nlohmann::json todoListJson;
     for (const Project& project : projects) {
