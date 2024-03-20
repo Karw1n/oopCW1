@@ -143,7 +143,7 @@ int App::run(int argc, char *argv[]) {
     case Action::UPDATE: {
       if (args["project"].count() && args["task"].count()) {
         std::string projectIdent = args["project"].as<std::string>();
-        std::string taskIdent = args["task"].as<std::string>();
+        
         
         if (projectIdent.find(':') != std::string::npos) {
           std::string oldIdent = projectIdent.substr(0, projectIdent.find(':'));
@@ -157,43 +157,46 @@ int App::run(int argc, char *argv[]) {
           }
         }
 
-        if (taskIdent.find(':') != std::string::npos) {
-          std::string oldIdent = taskIdent.substr(0, taskIdent.find(':'));
-          std::string newIdent = taskIdent.substr(taskIdent.find(':') + 1);
-          if (tlObj.getProject(projectIdent).containsTask(oldIdent)) {
-            tlObj.getProject(projectIdent).getTask(oldIdent).setIndent(newIdent);
-            taskIdent = newIdent;
-            
-          } else {
-            std::cerr << "Task " << oldIdent << " not found." << std::endl;
-            return 1;
+        if (args["task"].count()) {
+          std::string taskIdent = args["task"].as<std::string>();
+          if (taskIdent.find(':') != std::string::npos) {
+            std::string oldIdent = taskIdent.substr(0, taskIdent.find(':'));
+            std::string newIdent = taskIdent.substr(taskIdent.find(':') + 1);
+            if (tlObj.getProject(projectIdent).containsTask(oldIdent)) {
+              tlObj.getProject(projectIdent).getTask(oldIdent).setIndent(newIdent);
+              taskIdent = newIdent;
+              
+            } else {
+              std::cerr << "Task " << oldIdent << " not found." << std::endl;
+              return 1;
+            }
+          }
+
+          if (args.count("completed")) {
+              if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+                tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(true);
+              } else {
+                std::cerr << "Error project or task not found." << std::endl;
+                return 1;
+              }
+          }
+
+          if (args.count("incomplete")) {
+              if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
+                tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
+              } else {
+                std::cerr << "Error project or task not found." << std::endl;
+                return 1;
+              }
+          }
+
+          if (args.count("due")) {
+            std::string dueDateStr = args["due"].as<std::string>();
+            tlObj.getProject(projectIdent).getTask(taskIdent).getDueDate().setDateFromString(dueDateStr);
           }
         }
 
-        if (args.count("completed")) {
-            if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
-              tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(true);
-            } else {
-              std::cerr << "Error project or task not found." << std::endl;
-              return 1;
-            }
-        }
-
-        if (args.count("incomplete")) {
-            if (tlObj.containsProject(projectIdent) && tlObj.getProject(projectIdent).containsTask(taskIdent)) {
-              tlObj.getProject(projectIdent).getTask(taskIdent).setComplete(false);
-            } else {
-              std::cerr << "Error project or task not found." << std::endl;
-              return 1;
-            }
-        }
-
-        if (args.count("due")) {
-          std::string dueDateStr = args["due"].as<std::string>();
-          Date dueDate = Date();
-          dueDate.setDateFromString(dueDateStr);
-          tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
-        }
+        
         tlObj.save(db);
       }
       break;
@@ -214,9 +217,7 @@ int App::run(int argc, char *argv[]) {
                   return 1;
                 }
               } else if (args.count("due")) {
-                Date dueDate = Date();
-                dueDate.setDateFromString("");
-                tlObj.getProject(projectIdent).getTask(taskIdent).setDueDate(dueDate);
+                tlObj.getProject(projectIdent).getTask(taskIdent).getDueDate().setInitialised(false);
               } else {
                 tlObj.getProject(projectIdent).deleteTask(taskIdent);
               }

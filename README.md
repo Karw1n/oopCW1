@@ -9,3 +9,5 @@ I created a helper functions for
 
 In todolist.cpp:
 Created the function getProjects() which returns the list. 
+
+Date::setInitialised(bool initialised)

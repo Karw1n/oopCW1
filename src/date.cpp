@@ -57,6 +57,11 @@ void Date::setDateFromString(const std::string& date) {
     } 
 }
 
+// Function to set iniialized state.
+void Date::setInitialised(bool initialised) {
+    this->initialized = initialised;
+}
+
 // TODO Write a function, isInitialised, that takes no parameters and returns true
 //  if the Date object is initialised, and false if it is NOT initialised.
 // Example:

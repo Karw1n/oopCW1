@@ -31,6 +31,7 @@ public:
   ~Date() = default;
 
   void setDateFromString(const std::string& string);
+  void setInitialised(bool initialised);
   const bool isInitialised() const noexcept;
   std::string str() const;
 
